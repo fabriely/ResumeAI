@@ -1,22 +1,59 @@
-import openai
-from dotenv import load_dotenv
 import os
+# import PyPDF2
+from openai import OpenAI
+from dotenv import load_dotenv
 
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
 
-# Agora você pode acessar a chave da API
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# pdf_file = open("generativeai.pdf", "rb")
+# pdf_reader = PyPDF2.PdfReader(pdf_file)
 
-# Fazendo uma requisição para gerar texto com o modelo atualizado
-response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",  # Ou "gpt-4"
-    messages=[
-        {"role": "system", "content": "Você é um assistente útil."},
-        {"role": "user", "content": "Olá, como posso integrar com a OpenAI?"}
-    ],
-    max_tokens=50
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    organization="org-dHEb2RJFMlSk3AkW3EaqchuP",
+    project="proj_07gI9lPK51DvCfjgw6uIGRyW"
 )
 
-# Exibe a resposta
-print(response['choices'][0]['message']['content'].strip())
+# pages_summary = []
+# for page_num in range(len(pdf_reader.pages)):
+#     page_text = pdf_reader.pages[page_num].extract_text()
+#     chat_completion = client.chat.completions.create(
+#         model="gpt-4o",
+#         messages=[
+#             {"role": "system", "content": "You are a helpful assistant."},
+#             {"role": "user", "content": f"Summarize this: {page_text}"}
+#         ]
+#     )
+
+#     pages_summary.append(chat_completion.choices[0].message.content)
+#     print(pages_summary[page_num])
+
+# System prompt to use in the chat completion. Tells how the AI assistant should act and what it should do.
+system_prompt = {"role": "system", "content": "You are a helpful assistant that summarizes texts and data. You must take the"
+                "most important key points from the original content to the summarized text, you have to make the information" 
+                "on the summarized text very clear and understable for the user, and you should make topics and give examples" 
+                "if necessary for a better visualization and understanding of the content for the user."}
+
+# message_history is a list that stores the messages between users and AI in the chat completion messages parameter format.
+message_history = [system_prompt]
+
+while True:
+    # Gets user input, creates prompt, stores prompt in message_history variable.
+    user_input = input("\033[92mUser: \033[0m").strip()
+    user_prompt = {"role": "user", "content": user_input}
+    message_history.append(user_prompt)
+
+    # Generate response (summarized text) based on user prompt
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=message_history
+    )
+
+    # Stores assistant prompt in the message_history variable
+    # response.choices[0].message == {"role": "assistante", "content": "<response>"}
+    message_history.append(response.choices[0].message)
+
+    # Prints response to the terminal.
+    print("\033[92mAssistant: \033[0m" + response.choices[0].message.content)
+
