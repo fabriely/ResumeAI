@@ -45,7 +45,7 @@ const ChatbotHeader: React.FC = () => {
   };
 
   return (
-    <div className="bg-blue-50 min-h-screen flex flex-col items-center justify-start">
+    <div className="bg-white min-h-screen flex flex-col items-center justify-start">
       <Header />
   
       <div className="flex p-8 space-x-8 h-full mt-[64px] w-full max-w-screen-xl">
@@ -54,10 +54,10 @@ const ChatbotHeader: React.FC = () => {
         <div className="flex flex-col w-1/2 h-[800px] border-2 border-gray-500 rounded-lg">
           <ChatSection 
             messages={messages} 
-            className="flex-1 bg-blue-50 overflow-y-auto p-4" 
+            className="flex-1 bg-white overflow-y-auto p-4" 
           />
   
-          <div className="p-4 bg-gray-100 border-t-2">
+          <div className="p-4 bg-white border-t-2 rounded-sm">
             <MessageInput 
               message={message} 
               setMessage={setMessage} 
