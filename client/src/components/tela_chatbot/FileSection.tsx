@@ -65,13 +65,6 @@ const FileSection: React.FC<FileSectionProps> = ({ fileName, handleFileChange })
           )}
         </div>
       </div>
-
-      {/* Seção de seleção de arquivo */}
-      <label htmlFor="file-input" className="cursor-pointer text-center text-blue-600">
-        Adicionar Arquivo
-      </label>
-      <input id="file-input" type="file" className="hidden" onChange={handleFileChange} />
-      {fileName && <p className="text-center text-gray-600 mt-4">Arquivo Selecionado: {fileName}</p>}
     </div>
   );
 };
