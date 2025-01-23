@@ -1,2 +1,8 @@
 .env
 list.todo
+generativeai.txt
+generativeai.rtf
+generativeai.pdf
+generativeai.xml
+generativeai.docx
+file_reader_test.py

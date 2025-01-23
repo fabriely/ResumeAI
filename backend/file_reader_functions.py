@@ -4,7 +4,7 @@ from docx import Document
 from striprtf.striprtf import rtf_to_text
 
 def read_txt(filename:str) -> str:
-    with open(filename, 'r') as file:
+    with open(filename, 'r', encoding='utf-8') as file:
         file_content = file.read()
     return file_content
 
@@ -17,7 +17,7 @@ def read_rtf(filename:str) -> str:
 def read_pdf(filename:str) -> str:
     with open(filename, 'rb') as file:
         pdf_reader = PyPDF2.PdfReader(file)
-        pdf_content = [pdf_reader.pages[i].extract_text for i in range(len(pdf_reader.pages))]
+        pdf_content = [pdf_reader.pages[i].extract_text() for i in range(len(pdf_reader.pages))]
         file_content = " ".join(pdf_content)
     return file_content
 

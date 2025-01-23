@@ -28,7 +28,7 @@ while True:
 
     # Generate response (summarized text) based on user prompt
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=message_history
     )
 
@@ -38,4 +38,6 @@ while True:
 
     # Prints response to the terminal.
     print("\033[92mAssistant: \033[0m" + response.choices[0].message.content)
-
+    print("\033[92mPROMPT TOKENS:\033[0m", response.usage.prompt_tokens)
+    print("\033[92mCOMPLETION TOKENS:\033[0m", response.usage.completion_tokens)
+    print("\033[92mTOTAL TOKENS:\033[0m", response.usage.total_tokens)
