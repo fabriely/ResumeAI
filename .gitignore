@@ -1,9 +1,5 @@
 .env
 list.todo
-generativeai.txt
-generativeai.rtf
-generativeai.pdf
-generativeai.xml
-generativeai.docx
+generativeai.*
 file_reader_test.py
-__pycache__
+/__pycache__
