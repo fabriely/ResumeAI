@@ -6,3 +6,4 @@ generativeai.pdf
 generativeai.xml
 generativeai.docx
 file_reader_test.py
+__pycache__
