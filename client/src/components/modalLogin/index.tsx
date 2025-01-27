@@ -1,0 +1,84 @@
+import React from 'react';
+import { Logo, Google, GitHub, LinkedIn } from '../../assets';
+import Image from 'next/image';
+import { Button } from 'components/ui/button';
+import { Card, CardContent, CardHeader } from 'components/ui/card';
+import { Input } from 'components/ui/input';
+import { Label } from 'components/ui/label';
+
+interface LoginModalProps {
+  onClose: () => void;
+}
+
+const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
+  return (
+    <div className="fixed -inset-4 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="flex justify-around items-center p-4">
+        <Card className="w-[400px] h-[705px] bg-white relative">
+          <button
+            className="absolute top-1 right-2 text-black text-3xl"
+            onClick={onClose}
+          >
+            &times;
+          </button>
+          <CardHeader className='-mt-6'>
+            <div>
+              <Image src={Logo} alt="Logo do ResumeAI" />
+            </div>
+          </CardHeader>
+          <CardContent className="overflow-auto flex flex-col gap-4 p-4 -mt-14">
+            <div className="grid gap-2 justify-center">
+              <Label className="text-black" htmlFor="email">
+                Email
+              </Label>
+              <Input
+                className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
+                id="email"
+                type="email"
+                placeholder="email@example.com"
+                required
+              />
+            </div>
+            <div className="grid gap-2 justify-center">
+              <Label className="text-black" htmlFor="password">
+                Password
+              </Label>
+              <Input
+                className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
+                id="password"
+                type="password"
+                required
+              />
+              <div className="text-center">
+                <span className="text-black font-[Roboto]">Esqueci minha senha</span>
+              </div>
+            </div>
+            <Button className="w-full h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]">
+              Login
+            </Button>
+            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] text-black">
+              Cadastre-se Agora
+            </Button>
+            <div className="text-center">
+              <span className="text-[#B3B3B3]">ou</span>
+            </div>
+            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black">
+              <Image width={20} src={Google} alt="Google Icon" className="mr-2" />
+              Continue com Google
+            </Button>
+            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black">
+              <Image width={20} src={GitHub} alt="GitHub Icon" className="mr-2" />
+              Continue com Github
+            </Button>
+            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black">
+              <Image width={20} src={LinkedIn} alt="LinkedIn Icon" className="mr-2" />
+              Continue com LinkedIn
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default LoginModal;
