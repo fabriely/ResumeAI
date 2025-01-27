@@ -3,4 +3,10 @@ import Google from './google.png';
 import GitHub from './github.png';
 import LinkedIn from './linkedin.png';
 import Phone from './phone.png';
-export { Logo, Google, GitHub, LinkedIn, Phone };
+import seta from './seta.png';
+import Resumir from './summarize.png';
+import Send from './send.png';
+import Analisar from './analisar.png';
+import OCR from './ocr.png';
+
+export { Logo, seta, Resumir, Send, Analisar, OCR, Google, GitHub, LinkedIn, Phone};
