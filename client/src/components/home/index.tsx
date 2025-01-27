@@ -22,7 +22,8 @@ const Home = () => {
       {showLoginModal && (
         <LoginModal onClose={() => setShowLoginModal(false)} />
       )}
-      <Button className="text-white px-4 py-2 rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]">
+      <Button className="text-white px-4 py-2 rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
+      onClick={() => window.location.href = "/chatbot"}>
         Comece a Usar Agora!
       </Button>
     </div>
