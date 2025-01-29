@@ -1,35 +1,47 @@
-import PyPDF2
+from fastapi import UploadFile
+import pdfplumber
 import xml.etree.ElementTree as ET
 from docx import Document
 from striprtf.striprtf import rtf_to_text
 
-def read_txt(filename:str) -> str:
-    with open(filename, 'r', encoding='utf-8') as file:
-        file_content = file.read()
-    return file_content
+# Funções para ler arquivos
+def read_txt(file):
+    return file.read().decode("utf-8")
 
-def read_rtf(filename:str) -> str:
-    with open(filename, 'r') as file:
-        rtf_content = file.read()
-        file_content = rtf_to_text(rtf_content, encoding='utf-8')
-    return file_content
+def read_rtf(file):
+    return rtf_to_text(file.read().decode("utf-8"))
 
-def read_pdf(filename:str) -> str:
-    with open(filename, 'rb') as file:
-        pdf_reader = PyPDF2.PdfReader(file)
-        pdf_content = [pdf_reader.pages[i].extract_text() for i in range(len(pdf_reader.pages))]
-        file_content = " ".join(pdf_content)
-    return file_content
+def read_pdf(file):
+    try:
+        text = ""
+        with pdfplumber.open(file) as pdf:
+            for page in pdf.pages:
+                text += page.extract_text() + "\n"
+        return text.strip()
+    except Exception as e:
+        print(f"Erro ao processar PDF: {e}")
+        return None
 
-def read_docx(filename:str) -> str:
-    with open(filename, 'rb') as file:
-        document = Document(file)
-        docx_content = [paragraph.text for paragraph in document.paragraphs]
-        file_content = "\n".join(docx_content)
-    return file_content
+def read_docx(file):
+    doc = Document(file)
+    return "\n".join([paragraph.text for paragraph in doc.paragraphs])
 
-def read_xml(filename:str) -> str:
-    tree = ET.parse(filename)
+def read_xml(file):
+    tree = ET.parse(file)
     root = tree.getroot()
-    file_content = ET.tostring(root, method='xml').decode('utf-8')
-    return file_content
+    return ET.tostring(root, method="xml").decode("utf-8")
+
+# Função para determinar o tipo de arquivo e extrair o conteúdo
+def extract_text(file: UploadFile):
+    if file.filename.endswith(".txt"):
+        return read_txt(file.file)
+    elif file.filename.endswith(".rtf"):
+        return read_rtf(file.file)
+    elif file.filename.endswith(".pdf"):
+        return read_pdf(file.file)
+    elif file.filename.endswith(".docx"):
+        return read_docx(file.file)
+    elif file.filename.endswith(".xml"):
+        return read_xml(file.file)
+    else:
+        return None

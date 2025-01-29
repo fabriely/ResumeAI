@@ -2,27 +2,25 @@
 
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
-import FileSection from './FileSection';
 import ChatSection from './ChatSection';
 import MessageInput from './MessageInput';
+import SummaryPanel from './SummaryPanel';
 
 const ChatbotHeader: React.FC = () => {
   const [messages, setMessages] = useState<{ text: string, isBot: boolean }[]>([]);
   const [message, setMessage] = useState<string>('');
-  const [fileName, setFileName] = useState<string>('');
+  const [summary, setSummary] = useState<string>(''); // Gerenciar o resumo aqui
 
-  // Mensagem inicial do bot
   useEffect(() => {
     setMessages([
-      { text: 'Olá, seja bem-vindo ao ResumeAI, basta digitar o que você deseja fazer, entre resumir ou traduzir e enviar seu arquivo ao lado no formato PDF ou WORD.', isBot: true }
+      { text: 'Olá, seja bem-vindo ao ResumeAI! Envie um arquivo para obter um resumo.', isBot: true }
     ]);
   }, []);
 
   const handleSendMessage = () => {
     if (message.trim() !== '') {
-      setMessages([...messages, { text: message, isBot: false }]); // Adiciona a mensagem do usuário
+      setMessages([...messages, { text: message, isBot: false }]);
       setMessage('');
-      // Simulação de uma resposta do bot
       setMessages(prevMessages => [
         ...prevMessages,
         { text: 'Estou aqui para ajudar!', isBot: true }
@@ -37,26 +35,18 @@ const ChatbotHeader: React.FC = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    if (file) {
-      setFileName(file.name); 
-    }
-  };
-
   return (
     <div className="bg-white min-h-screen flex flex-col items-center justify-start">
       <Header />
-  
-      <div className="flex p-8 space-x-8 h-full mt-[64px] w-full max-w-screen-xl">
-        <FileSection fileName={fileName} handleFileChange={handleFileChange} />
-  
+      <div className="flex p-8 space-x-8 h-full mt-[64px] w-full max-w-screen">
+        <SummaryPanel summary={summary} selectedOption="Resumir" setSelectedOption={() => {}} handleFileChange={() => {}} />
         <div className="flex flex-col w-1/2 h-[800px] border-2 border-gray-500 rounded-lg">
           <ChatSection 
             messages={messages} 
+            setMessages={setMessages} 
             className="flex-1 bg-white overflow-y-auto p-4" 
+            setSummary={setSummary}  // Passar setSummary para ChatSection
           />
-  
           <div className="p-4 bg-white border-t-2 rounded-sm">
             <MessageInput 
               message={message} 
