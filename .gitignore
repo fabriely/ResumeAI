@@ -3,3 +3,5 @@ list.todo
 generativeai.*
 file_reader_test.py
 /__pycache__
+
+.venv 
