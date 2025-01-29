@@ -7,35 +7,36 @@ interface ChatSectionProps {
   messages: { text: string; isBot: boolean }[];
   className: string;
   setMessages: React.Dispatch<React.SetStateAction<{ text: string; isBot: boolean }[]>>;
+  setSummary: React.Dispatch<React.SetStateAction<string>>;  // Passar o setSummary aqui
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessages }) => {
+const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessages, setSummary }) => {
   const [files, setFiles] = useState<{ name: string; id: number }[]>([]);
   const [activeFile, setActiveFile] = useState<number | null>(null);
-  const [selectedOption, setSelectedOption] = useState<string>("Resumir"); // Opção selecionada
+  const [selectedOption, setSelectedOption] = useState<string>("Resumir");
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const newFile = { name: file.name, id: Date.now() };
-      setFiles([...files, newFile]);
+      setFiles((prev) => [...prev, newFile]);
       setActiveFile(newFile.id);
 
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("option", selectedOption); // Envia a opção escolhida para o backend
+      formData.append("option", selectedOption);
 
       try {
         const response = await api.post("summarize/", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
-        console.log("Resposta da API:", response.data); // Debug
+        // Ao invés de adicionar a mensagem ao chat, passar o resumo para o SummaryPanel
+        setSummary(response.data.summary);  // Passa o resumo para o estado summary
 
         setMessages((prev) => [
           ...prev,
           { text: `Arquivo "${file.name}" enviado (${selectedOption}). Resumo gerado:`, isBot: false },
-          { text: response.data.summary, isBot: true },
         ]);
       } catch (error) {
         console.error("Erro ao processar arquivo", error);
@@ -49,18 +50,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
 
   return (
     <div className={`${className} flex flex-col h-full rounded-lg`}>
-      {/* Adicionando FileSection acima da aba de arquivos */}
-      <FileSection fileName={files.length > 0 ? files[0].name : ""} handleFileChange={handleFileChange} selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
-
-      {/* Seção de abas de arquivos */}
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-100 border-b">
+      <div className="flex items-center justify-between px-4 py-2 bg-gray-100 ">
         <div className="flex space-x-4 overflow-x-auto">
           {files.map((file) => (
             <div
               key={file.id}
-              className={`flex items-center space-x-2 px-4 py-1 rounded-t-md cursor-pointer ${
-                activeFile === file.id ? "bg-gray-200 shadow-sm text-black" : "bg-gray-50 text-gray-500"
-              }`}
+              className={`flex items-center space-x-2 px-4 py-1 rounded-t-md cursor-pointer ${activeFile === file.id ? "bg-gray-200 shadow-sm text-black" : "bg-gray-50 text-gray-500"}`}
               onClick={() => setActiveFile(file.id)}
             >
               <span className="text-sm">{file.name}</span>
@@ -68,8 +63,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
                 className="text-black hover:text-black-500"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setFiles(files.filter((f) => f.id !== file.id));
-                  setActiveFile(files.length > 1 ? files[0].id : null);
+                  setFiles((prev) => prev.filter((f) => f.id !== file.id));
+                  setActiveFile((prev) => (files.length > 1 ? files[0].id : null));
                 }}
               >
                 <AiOutlineClose size={14} />
@@ -86,7 +81,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
         <input id="file-input" type="file" className="hidden" onChange={handleFileChange} />
       </div>
 
-      {/* Seção de mensagens do chat */}
       <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse bg-white">
         {messages.map((message, index) => (
           <div

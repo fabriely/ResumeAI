@@ -3,9 +3,11 @@ import { Logo, Phone } from '../../assets';
 import Image from 'next/image';
 import LoginModal from 'components/modalLogin';
 import { Button } from 'components/ui/button';
+import { useRouter } from 'next/navigation';
 
 const Home = () => {
     const [showLoginModal, setShowLoginModal] = React.useState(false);
+    const router = useRouter();
   return (
     <div className="bg-blue-50 min-h-screen flex flex-col items-center justify-start">
     <header className="w-full h-[64px] flex justify-between items-center px-8 py-4 bg-white shadow-md fixed top-0 z-50">
@@ -23,7 +25,7 @@ const Home = () => {
         <LoginModal onClose={() => setShowLoginModal(false)} />
       )}
       <Button className="text-white px-4 py-2 rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
-      onClick={() => window.location.href = "/chatbot"}>
+      onClick={() => router.push('/chatbot')}>
         Comece a Usar Agora!
       </Button>
     </div>
