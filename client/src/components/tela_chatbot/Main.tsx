@@ -13,7 +13,7 @@ const ChatbotHeader: React.FC = () => {
 
   useEffect(() => {
     setMessages([
-      { text: 'Olá, seja bem-vindo ao ResumeAI! Envie um arquivo PDF ou Word para obter um resumo.', isBot: true }
+      { text: 'Olá, seja bem-vindo ao ResumeAI! Envie um arquivo para obter um resumo.', isBot: true }
     ]);
   }, []);
 

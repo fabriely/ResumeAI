@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import api from "services/api";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
-import FileSection from "./FileSection";
 
 interface ChatSectionProps {
   messages: { text: string; isBot: boolean }[];
@@ -26,17 +25,22 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
       formData.append("file", file);
       formData.append("option", selectedOption);
 
+      setMessages((prev) => [
+        ...prev,
+        { text: `Arquivo "${file.name}" enviado!. Gerando resumo...`, isBot: true },
+      ]);
+
       try {
         const response = await api.post("summarize/", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
         // Ao invés de adicionar a mensagem ao chat, passar o resumo para o SummaryPanel
-        setSummary(response.data.summary);  // Passa o resumo para o estado summary
+        setSummary(response.data.summary);  
 
         setMessages((prev) => [
           ...prev,
-          { text: `Arquivo "${file.name}" enviado (${selectedOption}). Resumo gerado:`, isBot: false },
+          { text: `Resumo gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
         ]);
       } catch (error) {
         console.error("Erro ao processar arquivo", error);
@@ -81,7 +85,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
         <input id="file-input" type="file" className="hidden" onChange={handleFileChange} />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse bg-white">
+      <div className="flex-1 overflow-y-auto p-4 flex flex-col bg-white">
         {messages.map((message, index) => (
           <div
             key={index}

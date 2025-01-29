@@ -3,13 +3,11 @@ import { Resumir, Analisar, OCR } from '../../assets';
 import Image from 'next/image';
 
 interface FileSectionProps {
-  fileName: string;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedOption: string;
   setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const FileSection: React.FC<FileSectionProps> = ({ fileName, handleFileChange, selectedOption, setSelectedOption }) => {
+const FileSection: React.FC<FileSectionProps> = ({ selectedOption, setSelectedOption }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionChange = (option: string) => {
@@ -18,7 +16,7 @@ const FileSection: React.FC<FileSectionProps> = ({ fileName, handleFileChange, s
   };
 
   return (
-    <div className="w-full border-2 border-gray-500 flex flex-col items-center justify-start p-4 rounded-lg">
+    <div className="w-full border-gray-500 flex flex-col items-center justify-start p-4 rounded-lg">
       {/* Dropdown de seleção */}
       <div className="w-full mb-4">
         <label className="block mb-2 text-gray-700 font-medium">Escolha uma opção:</label>
