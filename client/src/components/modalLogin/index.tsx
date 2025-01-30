@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Logo, Google, GitHub, LinkedIn } from '../../assets';
 import Image from 'next/image';
 import { Button } from 'components/ui/button';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
 import { Input } from 'components/ui/input';
 import { Label } from 'components/ui/label';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    const result = await signIn('credentials', {
+      redirect: false,
+      username: email,
+      password: password
+    });
+
+    if (result?.error) {
+      console.error('Failed to login:', result.error);
+    } else {
+      router.push('/chatbot');
+      onClose();
+    }
+  };
+
   return (
     <div className="fixed -inset-4 flex items-center justify-center bg-black bg-opacity-50">
       <div className="flex justify-around items-center p-4">
@@ -36,6 +57,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                 id="email"
                 type="email"
                 placeholder="email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -47,13 +70,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                 className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
                 id="password"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <div className="text-center">
                 <span className="text-black font-[Roboto]">Esqueci minha senha</span>
               </div>
             </div>
-            <Button className="w-full h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]">
+            <Button
+              className="w-full h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
+              onClick={handleLogin}
+            >
               Login
             </Button>
             <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] text-black">
