@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import api from "../../services/api";
-import { ClipboardCopy, Trash } from "lucide-react";
+import { ClipboardCopy, Trash, Calendar } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Header from "components/tela_chatbot/Header";
 
 interface Summary {
   id: number;
-  content: string; // JSON em string
+  content: string; 
   user_email: string;
 }
 
@@ -59,13 +59,13 @@ export default function MeusDocumentos() {
       <div className="container mx-auto px-6 py-12 pt-24"> 
         {/* pt-24 para evitar sobreposição do Header */}
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          📂 Meus Documentos
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Meus Documentos
         </h1>
 
         {summaries.length === 0 ? (
           <p className="text-gray-500 text-center text-lg">
-            Nenhum resumo salvo ainda. 🚀
+            Nenhum resumo salvo ainda. 
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -81,8 +81,8 @@ export default function MeusDocumentos() {
                     <CardTitle className="text-lg font-semibold text-gray-900">
                       {parsedContent.file_name}
                     </CardTitle>
-                    <p className="text-sm text-gray-500">
-                      📅 {new Date(parsedContent.created_at).toLocaleString()}
+                    <p className="text-sm text-gray-500 flex items-center">
+                      <Calendar className="w-4 h-4 mr-1" />  {new Date(parsedContent.created_at).toLocaleString()}
                     </p>
                   </CardHeader>
                   <CardContent>
@@ -93,18 +93,18 @@ export default function MeusDocumentos() {
                       <Button
                         onClick={() => handleCopy(parsedContent.summary_content)}
                         size="sm"
-                        className="bg-blue-600 text-white hover:bg-blue-700 transition"
+                        className="bg-[#007aff] text-white hover:bg-blue-700 transition rounded-full"
                       >
                         <ClipboardCopy className="w-4 h-4 mr-2" /> Copiar
                       </Button>
-                      <Button
+                        <Button
                         onClick={() => handleDelete(id)}
                         variant="destructive"
                         size="sm"
-                        className="bg-red-600 text-white hover:bg-red-700 transition"
-                      >
-                        <Trash className="w-4 h-4 mr-2" /> Excluir
-                      </Button>
+                        className="bg-[#ff2d55] text-white hover:bg-red-700 transition rounded-full p-2"
+                        >
+                        <Trash className="w-4 h-4" />
+                        </Button>
                     </div>
                   </CardContent>
                 </Card>
