@@ -14,8 +14,6 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # Configuração do CORS para permitir requisições do frontend
-from fastapi.middleware.cors import CORSMiddleware
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Permite apenas esse frontend

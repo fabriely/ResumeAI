@@ -20,3 +20,4 @@ class SummaryRequest(BaseModel):
 
 class SummariesResponse(BaseModel):
     summaries: List[str]
+
