@@ -7,9 +7,7 @@ import data_visualization as dv
 load_dotenv()
 
 client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY"),
-    organization="org-dHEb2RJFMlSk3AkW3EaqchuP",
-    project="proj_07gI9lPK51DvCfjgw6uIGRyW"
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
 # System prompt to use in the chat completion. Tells how the AI assistant should act and what it should do.
