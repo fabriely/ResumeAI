@@ -1,20 +1,18 @@
-# app/routes/summaries.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import crud, schemas, dependencies
+import uuid
 
 router = APIRouter()
 
-@router.post("/users/{email}/summaries/")
-async def add_summary(email: str, summary: schemas.SummaryRequest, db: Session = Depends(dependencies.get_db)):
-    user = crud.add_summary(db=db, email=email, summary=summary.summary)
-    if user:
-        return {"message": "Resumo adicionado ao histórico."}
-    raise HTTPException(status_code=404, detail="User not found")
+@router.post("/users/")
+async def create_user(request: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
+    user = crud.create_user(db=db, email=request.email, password=request.password)
+    return {"data": {"user": user}}
 
-@router.get("/users/{email}/summaries/")
-async def get_summaries(email: str, db: Session = Depends(dependencies.get_db)):
-    summaries = crud.get_summaries(db=db, email=email)
-    if summaries is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"summaries": summaries}
+@router.post("/sessions")
+async def login(request: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
+    user = crud.get_user_by_email(db, request.email)
+    if user and user.password == request.password:
+        return {"data": {"user": user}}
+    raise HTTPException(status_code=401, detail="Invalid credentials")

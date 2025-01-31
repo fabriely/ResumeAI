@@ -1,7 +1,6 @@
 # app/schemas.py
 from pydantic import BaseModel
-from typing import List, Optional
-import uuid
+from typing import List, Dict
 
 class UserBase(BaseModel):
     email: str
@@ -17,7 +16,7 @@ class UserInDB(UserBase):
         orm_mode = True
 
 class SummaryRequest(BaseModel):
-    summary: str
+    content: Dict[str, str]  
 
 class SummariesResponse(BaseModel):
     summaries: List[str]

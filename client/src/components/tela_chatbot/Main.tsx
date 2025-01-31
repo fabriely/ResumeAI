@@ -46,7 +46,7 @@ const ChatbotHeader: React.FC = () => {
             setMessages={setMessages} 
             className="flex-1 bg-white overflow-y-auto p-4" 
             setSummary={setSummary}  // Passar setSummary para ChatSection
-          />
+            />
           <div className="p-4 bg-white border-t-2 rounded-sm">
             <MessageInput 
               message={message} 

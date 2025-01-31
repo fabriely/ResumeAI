@@ -20,7 +20,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   const handleLogin = async () => {
     const result = await signIn('credentials', {
       redirect: false,
-      username: email,
+      email: email,
       password: password
     });
 

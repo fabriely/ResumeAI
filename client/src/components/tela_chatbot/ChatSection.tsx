@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import api from "services/api";
+import { useSession } from "next-auth/react";
+
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
 interface ChatSectionProps {
@@ -13,6 +15,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
   const [files, setFiles] = useState<{ name: string; id: number }[]>([]);
   const [activeFile, setActiveFile] = useState<number | null>(null);
   const [selectedOption, setSelectedOption] = useState<string>("Resumir");
+
+  const { data: session } = useSession();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -36,12 +40,25 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
         });
 
         // Ao invés de adicionar a mensagem ao chat, passar o resumo para o SummaryPanel
-        setSummary(response.data.summary);  
+        const summary = response.data.summary_data
+        console.log(response.data.summary_data);
+        setSummary(summary.summary_content);  
 
-        setMessages((prev) => [
-          ...prev,
-          { text: `Resumo gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
-        ]);
+         // Enviar o resumo para o backend e associar ao perfil do usuário
+         if (session?.user?.email) {
+          await api.post(`/users/${session.user.email}/summaries/`, { content: summary });
+          setMessages((prev) => [
+            ...prev,
+            { text: `Resumo gerado para o arquivo, veja ao lado! Ele também foi salvo em seu histórico para que você possa acessar depois!.`, isBot: true },
+          ]);
+        }
+        else {
+          setMessages((prev) => [
+              ...prev,
+              { text: `Resumo gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
+            ]);
+            }
+
       } catch (error) {
         console.error("Erro ao processar arquivo", error);
         setMessages((prev) => [
