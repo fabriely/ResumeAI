@@ -53,12 +53,10 @@ export default function MeusDocumentos() {
     }
   };
 
-  return (   
+  return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      <div className="container mx-auto px-6 py-12 pt-24"> 
-        {/* pt-24 para evitar sobreposição do Header */}
-
+      <div className="container mx-auto px-6 py-12 pt-24"> {/* pt-24 para evitar sobreposição do Header */}
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
           Meus Documentos
         </h1>
@@ -75,38 +73,38 @@ export default function MeusDocumentos() {
               return (
                 <Card
                   key={id}
-                  className="relative shadow-lg border border-gray-200 bg-white rounded-xl hover:shadow-xl transition duration-300"
+                  className="flex-1 shadow-lg border border-gray-200 bg-white rounded-xl hover:shadow-xl transition duration-300 flex flex-col"
                 >
                   <CardHeader>
                     <CardTitle className="text-lg font-semibold text-gray-900">
                       {parsedContent.file_name}
                     </CardTitle>
                     <p className="text-sm text-gray-500 flex items-center">
-                      <Calendar className="w-4 h-4 mr-1" />  {new Date(parsedContent.created_at).toLocaleString()}
+                      <Calendar className="w-4 h-4 mr-1" /> {new Date(parsedContent.created_at).toLocaleString()}
                     </p>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-1 overflow-hidden">
                     <p className="text-gray-700 line-clamp-3 text-sm">
                       {parsedContent.summary_content}
                     </p>
-                    <div className="mt-4 flex justify-between">
-                      <Button
-                        onClick={() => handleCopy(parsedContent.summary_content)}
-                        size="sm"
-                        className="bg-[#007aff] text-white hover:bg-blue-700 transition rounded-full"
-                      >
-                        <ClipboardCopy className="w-4 h-4 mr-2" /> Copiar
-                      </Button>
-                        <Button
-                        onClick={() => handleDelete(id)}
-                        variant="destructive"
-                        size="sm"
-                        className="bg-[#ff2d55] text-white hover:bg-red-700 transition rounded-full p-2"
-                        >
-                        <Trash className="w-4 h-4" />
-                        </Button>
-                    </div>
                   </CardContent>
+                  <div className="mt-4 flex justify-between pt-4 pb-2 pl-4 pr-4">
+                    <Button
+                      onClick={() => handleCopy(parsedContent.summary_content)}
+                      size="sm"
+                      className="bg-[#007aff] text-white hover:bg-blue-700 transition rounded-full"
+                    >
+                      <ClipboardCopy className="w-4 h-4 mr-2" /> Copiar
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(id)}
+                      variant="destructive"
+                      size="sm"
+                      className="bg-[#ff2d55] text-white hover:bg-red-700 transition rounded-full p-2"
+                    >
+                      <Trash className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </Card>
               );
             })}

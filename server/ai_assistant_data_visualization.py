@@ -1,57 +1,59 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
-import data_visualization as dv
+import matplotlib.pyplot as plt
 
 # Load .env environment variables
 load_dotenv()
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+# Initialize OpenAI client with API key from environment variables
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# System prompt to use in the chat completion. Tells how the AI assistant should act and what it should do.
-system_prompt = {"role": "system", "content": "You are a helpful assistant that analyzes texts and data and extracts"
-                 "from them statistically insightful information to display in a appropriate graph or chart. You are"
-                 "free to choose which type of graph or chart better suits the information to be visualized by the"
-                 "users. You can and should plot more than one graph or chart, but only if you can extract various"
-                 "informations that need different graphs or charts to be visualized. You should NOT plot more than"
-                 "one graph or chart for that displays same information, even if displayed in different graphs or" 
-                 "charts. You should only display the graphs or charts and should NOT give summaries or explanations" 
-                 "to the text or data. You have to return the code that plots the graph or chart using python libraries"
-                 "and you should not write ```python in the beginning and ``` in the end of the file."}
+# System prompt to instruct the assistant for data visualization tasks
+system_prompt = {
+    "role": "system",
+    "content": (
+        "You are a helpful assistant that analyzes texts and data and extracts "
+        "statistically insightful information to display in an appropriate graph or chart. "
+        "You are free to choose which type of graph or chart better suits the information to be visualized by the "
+        "users. You can and should plot more than one graph or chart, but only if you can extract various "
+        "information that need different graphs or charts to be visualized. You should NOT plot more than "
+        "one graph or chart for the same information, even if displayed in different forms. "
+        "You should only display the graphs or charts and should NOT give summaries or explanations "
+        "to the text or data. You have to return the code that plots the graph or chart using python libraries "
+        "such as matplotlib, seaborn, or pandas, and you should NOT write ```python in the beginning and ``` "
+        "in the end of the file. You Do NOT put plt.show() in the code. "
+    )
+}
 
-# message_history is a list that stores the messages between users and AI in the chat completion messages parameter format.
-message_history = [system_prompt]
+# Function to handle data visualization request
+def generate_data_visualization(text: str) -> str:
 
-# Gets user input, creates prompt, stores prompt in message_history variable.
-user_input = input("\033[92mUser: \033[0m").strip()
-user_prompt = {"role": "user", "content": user_input}
-message_history.append(user_prompt)
-
-# Generate response (summarized text) based on user prompt
-response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=message_history
-)
-
-# Stores assistant prompt in the message_history variable
-# response.choices[0].message == {"role": "assistante", "content": "<response>"}
-message_history.append(response.choices[0].message)
-
-# Prints response to the terminal.
-# print("\033[92mAssistant: \033[0m" + response.choices[0].message.content)
-print("\033[92mOK\033[0m")
-
-data_visualization_file = open("data_visualization.py", "w")
-data_visualization_file.write(response.choices[0].message.content)
-data_visualization_file.close()
+    messages = [system_prompt, {"role": "user", "content": text}]
 
 
+    # Send the messages to OpenAI's API for processing
+    response = client.chat.completions.create(
+        model="gpt-4o",  # Use the appropriate model
+        messages=messages
+    )
+
+
+    # Write the response (which should be Python code for visualization) to a file
+    data_visualization_code = response.choices[0].message.content
+
+    # Execute the visualization code
+    exec(data_visualization_code)
+
+    # Save the generated plot to a file
+    output_file = "data_visualization.png"
+    plt.savefig(output_file, format="png")
+    plt.close()
+
+    return output_file
 
 
 
+    
 
-
-
-
+    

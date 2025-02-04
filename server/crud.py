@@ -1,11 +1,16 @@
 # app/crud.py
+from bcrypt import hashpw, gensalt
 from sqlalchemy.orm import Session
 from models import User, Summary
 import schemas
 import json
 
 def create_user(db: Session, email: str, password: str):
-    user = User(email=email, password=password)
+    # Gerando o salt e o hash da senha
+    hashed_password = hashpw(password.encode('utf-8'), gensalt())
+    
+    # Criando o usuário com o hash da senha
+    user = User(email=email, password=hashed_password.decode('utf-8'))
     db.add(user)
     db.commit()
     db.refresh(user)
