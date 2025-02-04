@@ -5,17 +5,16 @@ import { useSession } from "next-auth/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 
 interface ChatSectionProps {
+  selectedOption: string;
   messages: { text: string; isBot: boolean }[];
   className: string;
   setMessages: React.Dispatch<React.SetStateAction<{ text: string; isBot: boolean }[]>>;
   setSummary: React.Dispatch<React.SetStateAction<string>>;  // Passar o setSummary aqui
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessages, setSummary }) => {
+const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, className, setMessages, setSummary }) => {
   const [files, setFiles] = useState<{ name: string; id: number }[]>([]);
   const [activeFile, setActiveFile] = useState<number | null>(null);
-  const [selectedOption, setSelectedOption] = useState<string>("Resumir");
-
   const { data: session } = useSession();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,30 +34,45 @@ const ChatSection: React.FC<ChatSectionProps> = ({ messages, className, setMessa
       ]);
 
       try {
-        const response = await api.post("summarize/", formData, {
+        const route = selectedOption === "Resumir" ? "/summarize" : "/analyze"; // Dependendo da seleção
+        const response = await api.post(route, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
-        // Ao invés de adicionar a mensagem ao chat, passar o resumo para o SummaryPanel
-        const summary = response.data.summary_data
-        console.log(response.data.summary_data);
-        setSummary(summary.summary_content);  
+        if (selectedOption === "Analisar") {
+          const analysis = response.data.image_base64;
 
-         // Enviar o resumo para o backend e associar ao perfil do usuário
-         if (session?.user?.email) {
-          await api.post(`/users/${session.user.email}/summaries/`, { content: summary });
+            const imageElement = document.createElement("img");
+            imageElement.src = `data:image/png;base64,${analysis}`;
+
+            document.getElementById("image-container")?.appendChild(imageElement);
+            setSummary(analysis);
+          } else if (selectedOption === "Resumir") {
+          // Condicional para garantir que só processe um resumo
+            const summary = response.data.summary_data;
+            if (summary && summary.summary_content) {
+              setSummary(summary.summary_content);
+
+              // Enviar o resumo para o backend e associar ao perfil do usuário
+              if (session?.user?.email) {
+                await api.post(`/users/${session.user.email}/summaries/`, { content: summary });
+                setMessages((prev) => [
+                  ...prev,
+                  { text: `Resultado gerado para o arquivo, veja ao lado!`, isBot: true },
+                ]);
+              } else {
+                setMessages((prev) => [
+                  ...prev,
+                  { text: `Resultado gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
+                ]);
+              }
+            }
+        } else {
           setMessages((prev) => [
             ...prev,
-            { text: `Resumo gerado para o arquivo, veja ao lado! Ele também foi salvo em seu histórico para que você possa acessar depois!.`, isBot: true },
+            { text: "Nenhum resumo gerado. Tente novamente.", isBot: true },
           ]);
         }
-        else {
-          setMessages((prev) => [
-              ...prev,
-              { text: `Resumo gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
-            ]);
-            }
-
       } catch (error) {
         console.error("Erro ao processar arquivo", error);
         setMessages((prev) => [

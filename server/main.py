@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
 from models import Base
-from routes import users, summaries
+from routes import users, summaries, analyze
 
 DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -25,6 +25,7 @@ app.add_middleware(
 
 app.include_router(users.router)
 app.include_router(summaries.router)
+app.include_router(analyze.router)
 
 @app.get("/")
 async def root():
