@@ -1,12 +1,20 @@
 # app/schemas.py
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, constr, field_validator
 from typing import List, Dict
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
 
 class UserCreate(UserBase):
-    password: str
+    password: constr(min_length=8)
+
+    @field_validator('password')
+    def password_complexity(cls, v):
+        if not any(char.isdigit() for char in v):
+            raise ValueError('A senha precisa ter pelo menos um número')
+        if not any(char in '!@#$%^&*(),.?":{}|<>_-+=~`[]\\;\'/' for char in v):
+            raise ValueError('A senha precisa ter pelo menos um caractere especial')
+        return v
 
 class UserInDB(UserBase):
     email: str
@@ -21,3 +29,14 @@ class SummaryRequest(BaseModel):
 class SummariesResponse(BaseModel):
     summaries: List[str]
 
+class LoginCredentials(BaseModel):
+    email: EmailStr
+    password: constr(min_length=8)
+
+    @field_validator('password')
+    def password_complexity(cls, v):
+        if not any(char.isdigit() for char in v):
+            raise ValueError('A senha precisa ter pelo menos um número')
+        if not any(char in '!@#$%^&*(),.?":{}|<>_-+=~`[]\\;\'/' for char in v):
+            raise ValueError('A senha precisa ter pelo menos um caractere especial')
+        return v

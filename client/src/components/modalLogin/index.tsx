@@ -8,6 +8,8 @@ import { Label } from "components/ui/label";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react"; 
+import { validateEmail, validatePassword} from "../../validations/loginValidationSchema";
+import { ResumeIcon } from "@radix-ui/react-icons";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -18,30 +20,52 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
 
   const handleLogin = async () => {
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: email,
-      password: password,
-    });
+    try {
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.success) {
+        setErrorMessage("Insira um email válido.");
+        return;
+      }
 
-    if (result?.error) {
-      console.error("Falha no login:", result.error);
-    } else {
-      router.push("/chatbot");
-      onClose();
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.success) {
+        setErrorMessage("Senha incorreta.");
+        return;
+      }
+
+      if (emailValidation.success && passwordValidation.success) {
+        const result = await signIn("credentials", {
+          redirect: false,
+          email: email,
+          password: password,
+        });
+
+        if (result?.error) {
+          console.error("Falha no login:", result.error);
+          setErrorMessage("Email ou senha incorretos.");
+        } else {
+          router.push("/chatbot");
+          onClose();
+        }
+      };
+
+    } catch (error) {
+      setErrorMessage("An unexpected error occurred. Please try again.");
+      console.error(error);
     }
   };
 
   return (
     <div className="fixed -inset-4 flex items-center justify-center bg-black bg-opacity-50">
       <div className="flex justify-around items-center p-4">
-        <Card className="w-[400px] h-[705px] bg-white relative">
+        <Card className="w-[400px] bg-white relative">
           <button
             className="absolute top-2 right-4 text-black text-3xl"
             onClick={onClose}
@@ -90,13 +114,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                   {passwordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
                 </div>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm mt-0">{errorMessage}</p>
+                )}
               <div className="text-center">
                 <span className="text-black font-[Roboto] cursor-pointer hover:underline">
                   Esqueci minha senha
                 </span>
               </div>
             </div>
-
             <Button
               className="w-full h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
               onClick={handleLogin}
@@ -113,14 +139,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black">
               <Image width={20} src={Google} alt="Google Icon" className="mr-2" />
               Continue com Google
-            </Button>
-            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black">
-              <Image width={20} src={GitHub} alt="GitHub Icon" className="mr-2" />
-              Continue com Github
-            </Button>
-            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black">
-              <Image width={20} src={LinkedIn} alt="LinkedIn Icon" className="mr-2" />
-              Continue com LinkedIn
             </Button>
           </CardContent>
         </Card>
