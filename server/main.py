@@ -1,5 +1,7 @@
 # app/main.py
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import ValidationError
+from schemas import LoginCredentials
 from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
 from models import Base
@@ -30,3 +32,12 @@ app.include_router(analyze.router)
 @app.get("/")
 async def root():
     return {"message": "Bem-vindo à API!"}
+
+@app.post("/api/login")
+async def login(credentials: LoginCredentials):
+    try:
+        credentials = LoginCredentials(**credentials.model_dump())
+    except ValidationError as e:
+        raise HTTPException(status_code=400, detail=e.errors())
+
+    return {"success": True, "message": "Login realizado com sucesso!"}
