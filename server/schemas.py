@@ -3,13 +3,14 @@ from pydantic import BaseModel
 from typing import List, Dict
 
 class UserBase(BaseModel):
+    name: str 
+    last_name: str 
     email: str
 
 class UserCreate(UserBase):
     password: str
 
 class UserInDB(UserBase):
-    email: str
     summaries: List[str] = []
 
     class Config:
@@ -20,4 +21,3 @@ class SummaryRequest(BaseModel):
 
 class SummariesResponse(BaseModel):
     summaries: List[str]
-
