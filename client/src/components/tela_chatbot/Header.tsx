@@ -22,7 +22,6 @@ const Header: React.FC = () => {
           <Image src={Logo} alt="Logo do ResumeAI" width={170} />
         </a>
         <nav className="space-x-4">
-          <a href="#features" className="text-gray-700 font-medium hover:text-[#4b52d1]">Ferramentas</a>
           <a href="#pricing" className="text-gray-700 font-medium hover:text-[#4b52d1]">Preços</a>
           <a href="#help" className="text-gray-700 font-medium hover:text-[#4b52d1]">Ajuda</a>
         </nav>

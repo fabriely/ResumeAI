@@ -1,5 +1,5 @@
 import Login from "components/modalLogin"
 import Home from "components/home"
-
-export{ Login, Home };
+import Header from "components/tela_chatbot"
+export{ Login, Home, Header };
 
