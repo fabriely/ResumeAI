@@ -2,7 +2,9 @@
 list.todo
 generativeai.*
 file_reader_test.py
-/__pycache__
+__pycache__
+
+routes/__pycache__
 
 .venv 
 test.db
