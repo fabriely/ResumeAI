@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
 
-Base = declarative_base(
+Base = declarative_base()
   
 class User(Base):
     __tablename__ = "users"
@@ -24,4 +24,4 @@ class Summary(Base):
     user_email = Column(Integer, ForeignKey("users.email"))
 
     user = relationship("User", back_populates="summaries")
-)
+

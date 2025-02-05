@@ -7,7 +7,7 @@ router = APIRouter()
 
 @router.post("/users/")
 async def create_user(request: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
-    user = crud.create_user(db=db, email=request.email, password=request.password)
+    user = crud.create_user(db=db, name=request.name, last_name=request.last_name, email=request.email, password=request.password)
     return {"data": {"user": user}}
 
 @router.post("/sessions")
@@ -16,3 +16,4 @@ async def login(request: schemas.UserCreate, db: Session = Depends(dependencies.
     if user and checkpw(request.password.encode('utf-8'), user.password.encode('utf-8')):
             return {"data": {"user": user}}
     raise HTTPException(status_code=401, detail="Invalid credentials")
+
