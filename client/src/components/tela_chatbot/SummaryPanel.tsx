@@ -23,7 +23,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({ summary, selectedOption, se
       if (selectedOption === "Resumir" || selectedOption === "Analisar") {
         const resolvedSummary = await (summary instanceof Promise ? summary : Promise.resolve(summary));
         
-        if (resolvedSummary && resolvedSummary.startsWith("/9j") || resolvedSummary.length > 100) { 
+        if (resolvedSummary && resolvedSummary.startsWith("/9j") && selectedOption=="Analisar" || resolvedSummary.length > 100 && selectedOption=="Analisar") { 
           // Adiciona o prefixo correto para base64
           setImageSrc(`data:image/png;base64,${resolvedSummary}`);
           setFormattedSummary("");  
