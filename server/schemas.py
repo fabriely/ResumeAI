@@ -3,7 +3,9 @@ from pydantic import BaseModel, EmailStr, constr, field_validator
 from typing import List, Dict
 
 class UserBase(BaseModel):
-    email: EmailStr
+    name: str 
+    last_name: str 
+    email: str
 
 class UserCreate(UserBase):
     password: constr(min_length=8)
@@ -17,7 +19,6 @@ class UserCreate(UserBase):
         return v
 
 class UserInDB(UserBase):
-    email: str
     summaries: List[str] = []
 
     class Config:
