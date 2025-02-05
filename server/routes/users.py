@@ -17,3 +17,9 @@ async def login(request: schemas.UserCreate, db: Session = Depends(dependencies.
             return {"data": {"user": user}}
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
+@router.get("/users/{email}") 
+async def get_user(email: str, db: Session = Depends(dependencies.get_db)):
+    user = crud.get_user_by_email(db, email)
+    if user:
+        return {"data": {"user": user}}
+    raise HTTPException(status_code=404, detail="User not found")

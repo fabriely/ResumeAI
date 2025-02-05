@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Logo, Google, GitHub, LinkedIn } from "../../assets";
+import { Logo, Google } from "../../assets";
 import Image from "next/image";
 import { Button } from "components/ui/button";
 import { Card, CardContent, CardHeader } from "components/ui/card";
@@ -9,7 +9,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react"; 
 import { validateEmail, validatePassword} from "../../validations/loginValidationSchema";
-import { ResumeIcon } from "@radix-ui/react-icons";
 
 interface LoginModalProps {
   onClose: () => void;

@@ -1,9 +1,12 @@
 'use client'
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import api from "../../services/api";
+import { useSession } from "next-auth/react";
+
 
 interface ModalProfileProps {
     onClose: () => void;
@@ -11,7 +14,28 @@ interface ModalProfileProps {
 
 const ProfileModal: React.FC<ModalProfileProps> = ({ onClose }) => {
     const router = useRouter();
+    const { data: session } = useSession();
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                if (session?.user?.email) {
+                    const response = await api.get(`/users/${session.user.email}`);
+                        setName(response.data.data.user.name); 
+                        setEmail(response.data.data.user.email);  
+                    
+                }
+            } catch (error) {
+                console.error('Erro ao buscar dados do usuário', error);
+            }
+        };
+    
+        fetchUserData();
+    }, [session?.user?.email]);  
+    
     return (
         <div className="fixed -inset-4 bg-black bg-opacity-50 flex justify-end">
             <motion.div 
@@ -30,15 +54,13 @@ const ProfileModal: React.FC<ModalProfileProps> = ({ onClose }) => {
                         &times;
                     </button>
 
-                    {/* Título */}
-                    <h2 className="text-2xl text-black font-semibold">User Profile</h2>
 
                     {/* Imagem de Perfil */}
-                    <div className="w-32 h-32 bg-gray-300 rounded-full"></div>
+                    <div className="w-52 h-52 bg-gray-300 rounded-full"></div>
 
                     {/* Nome e Email */}
-                    <p className="text-xl font-semibold">John Doe</p>
-                    <p className="text-sm text-gray-500">john.doe@gmail.com</p>
+                    <p className="text-4xl font-semibold">{name}</p>
+                    <p className="text-2xl font-semibold text-gray-500">{email}</p>
 
                     {/* Botões */}
                     <div className="w-full space-y-3">

@@ -3,8 +3,6 @@ from pydantic import BaseModel, EmailStr, constr, field_validator
 from typing import List, Dict
 
 class UserBase(BaseModel):
-    name: str 
-    last_name: str 
     email: str
 
 class UserCreate(UserBase):
