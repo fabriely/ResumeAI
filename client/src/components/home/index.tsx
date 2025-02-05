@@ -13,8 +13,8 @@ const Home = () => {
       </div>
 
       {/* Texto principal */}
-      <div className="max-w-6xl z-20 mt-16 md:mt-0">
-        <h2 className="text-[#000000] text-5xl md:text-3xl xl:text-3xl 2xl:text-6xl font-light ml-12 leading-tight">
+      <div className="max-w-6xl z-0 mt-16 md:mt-0">
+        <h2 className="text-[#000000] text-5xl md:text-5xl xl:text-5xl 2xl:text-6xl font-light ml-12 leading-tight">
           <span className="text-[#5331CF] font-black">Nós ajudamos</span> a transformar textos detalhados em resumos claros e gráficos visuais impactantes.
         </h2>
         <p className="mt-4 text-lg 2xl:text-2xl text-[#5331CF] text-opacity-65 font-semibold ml-12">

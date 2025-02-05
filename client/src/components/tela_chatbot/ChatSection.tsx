@@ -42,31 +42,31 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
         if (selectedOption === "Analisar") {
           const analysis = response.data.image_base64;
 
-            const imageElement = document.createElement("img");
-            imageElement.src = `data:image/png;base64,${analysis}`;
+          const imageElement = document.createElement("img");
+          imageElement.src = `data:image/png;base64,${analysis}`;
 
-            document.getElementById("image-container")?.appendChild(imageElement);
-            setSummary(analysis);
-          } else if (selectedOption === "Resumir") {
+          document.getElementById("image-container")?.appendChild(imageElement);
+          setSummary(analysis);
+        } else if (selectedOption === "Resumir") {
           // Condicional para garantir que só processe um resumo
-            const summary = response.data.summary_data;
-            if (summary && summary.summary_content) {
-              setSummary(summary.summary_content);
+          const summary = response.data.summary_data;
+          if (summary && summary.summary_content) {
+            setSummary(summary.summary_content);
 
-              // Enviar o resumo para o backend e associar ao perfil do usuário
-              if (session?.user?.email) {
-                await api.post(`/users/${session.user.email}/summaries/`, { content: summary });
-                setMessages((prev) => [
-                  ...prev,
-                  { text: `Resultado gerado para o arquivo, veja ao lado!`, isBot: true },
-                ]);
-              } else {
-                setMessages((prev) => [
-                  ...prev,
-                  { text: `Resultado gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
-                ]);
-              }
+            // Enviar o resumo para o backend e associar ao perfil do usuário
+            if (session?.user?.email) {
+              await api.post(`/users/${session.user.email}/summaries/`, { content: summary });
+              setMessages((prev) => [
+                ...prev,
+                { text: `Resultado gerado para o arquivo, veja ao lado!`, isBot: true },
+              ]);
+            } else {
+              setMessages((prev) => [
+                ...prev,
+                { text: `Resultado gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
+              ]);
             }
+          }
         } else {
           setMessages((prev) => [
             ...prev,
@@ -120,9 +120,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`p-3 m-2 rounded-lg max-w-[80%] ${
-              message.isBot ? "bg-gray-200 text-black self-start" : "bg-purple-600 text-white self-end"
-            }`}
+            className={`p-3 m-2 rounded-lg max-w-[80%] ${message.isBot ? "bg-gray-200 text-black self-start" : "bg-purple-600 text-white self-end"
+              }`}
           >
             {message.text}
           </div>
