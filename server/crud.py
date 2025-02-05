@@ -5,12 +5,18 @@ from models import User, Summary
 import schemas
 import json
 
-def create_user(db: Session, email: str, password: str):
+def create_user(db: Session, name: str, last_name: str, email: str, password: str):
     # Gerando o salt e o hash da senha
     hashed_password = hashpw(password.encode('utf-8'), gensalt())
-    
-    # Criando o usuário com o hash da senha
-    user = User(email=email, password=hashed_password.decode('utf-8'))
+  
+    # Criando o usuário com todas as informações obrigatórias
+    user = User(
+      name = name,
+      last_name = last_name,
+      email = email,
+      password = hashed_password.decode('utf-8')
+    )
+  
     db.add(user)
     db.commit()
     db.refresh(user)
