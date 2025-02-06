@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import ChatSection from './ChatSection';
-import MessageInput from './MessageInput';
 import SummaryPanel from './SummaryPanel';
 
 const ChatbotHeader: React.FC = () => {
@@ -11,7 +10,6 @@ const ChatbotHeader: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [summary, setSummary] = useState<string>(''); // Gerenciar o resumo aqui
   const [selectedOption, setSelectedOption] = useState<string>('Resumir'); // Aqui definimos o estado selecionado para "Resumir"
-
 
   useEffect(() => {
     setMessages([
@@ -49,15 +47,7 @@ const ChatbotHeader: React.FC = () => {
             setMessages={setMessages} 
             className="flex-1 bg-white overflow-y-auto p-4" 
             setSummary={setSummary}  // Passar setSummary para ChatSection
-            />
-          <div className="p-4 bg-white border-t-2 rounded-sm">
-            <MessageInput 
-              message={message} 
-              setMessage={setMessage} 
-              handleKeyPress={handleKeyPress} 
-              handleSendMessage={handleSendMessage} 
-            />
-          </div>
+          />
         </div>
       </div>
     </div>
