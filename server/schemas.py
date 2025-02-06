@@ -26,6 +26,9 @@ class UserInDB(UserBase):
 class SummaryRequest(BaseModel):
     content: Dict[str, str]  
 
+class MessageRequest(BaseModel):
+    message: str
+    
 class SummariesResponse(BaseModel):
     summaries: List[str]
 
@@ -40,3 +43,4 @@ class LoginCredentials(BaseModel):
         if not any(char in '!@#$%^&*(),.?":{}|<>_-+=~`[]\\;\'/' for char in v):
             raise ValueError('A senha precisa ter pelo menos um caractere especial')
         return v
+

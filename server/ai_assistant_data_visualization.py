@@ -22,7 +22,7 @@ system_prompt = {
         "You should only display the graphs or charts and should NOT give summaries or explanations "
         "to the text or data. You have to return the code that plots the graph or chart using python libraries "
         "such as matplotlib, seaborn, or pandas, and you should NOT write ```python in the beginning and ``` "
-        "in the end of the file. You Do NOT put plt.show() in the code. "
+        "in the end of the file. You do NOT put plt.show() in the code."
     )
 }
 
@@ -34,7 +34,7 @@ def generate_data_visualization(text: str) -> str:
 
     # Send the messages to OpenAI's API for processing
     response = client.chat.completions.create(
-        model="gpt-4o",  # Use the appropriate model
+        model="gpt-4o-mini",  # Use the appropriate model
         messages=messages
     )
 
