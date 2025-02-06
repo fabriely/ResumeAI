@@ -8,7 +8,7 @@ router = APIRouter()
 
 @router.post("/users/")
 async def create_user(request: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
-    user = crud.create_user(db=db, email=request.email, password=request.password)
+    user = crud.create_user(db=db, name=request.name, last_name=request.last_name, email=request.email, password=request.password)
     return {"data": {"user": user}}
 
 @router.post("/sessions")
@@ -24,3 +24,4 @@ async def summarize_message(message: schemas.MessageRequest):
     message = response_message(text)
 
     return {"message": message}
+
