@@ -10,10 +10,10 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "users"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    name = Column(String, nullable=False) 
-    last_name = Column(String, nullable=False)  
-    email = Column(String, unique=True, index=True, nullable=False)
-    password = Column(String, nullable=False)
+    name = Column(String) 
+    last_name = Column(String)  
+    email = Column(String, unique=True, index=True)
+    password = Column(String)
     summaries = relationship("Summary", back_populates="user")
 
 class Summary(Base):

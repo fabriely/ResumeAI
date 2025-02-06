@@ -8,3 +8,4 @@ routes/__pycache__
 
 .venv 
 test.db
+node_modules
