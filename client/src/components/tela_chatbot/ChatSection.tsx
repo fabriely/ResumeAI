@@ -1,40 +1,47 @@
 import React, { useState } from "react";
 import api from "services/api";
 import { useSession } from "next-auth/react";
-
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
+import MessageInput from "./MessageInput";
 
 interface ChatSectionProps {
   selectedOption: string;
   messages: { text: string; isBot: boolean }[];
   className: string;
   setMessages: React.Dispatch<React.SetStateAction<{ text: string; isBot: boolean }[]>>;
-  setSummary: React.Dispatch<React.SetStateAction<string>>;  // Passar o setSummary aqui
+  setSummary: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, className, setMessages, setSummary }) => {
   const [files, setFiles] = useState<{ name: string; id: number }[]>([]);
   const [activeFile, setActiveFile] = useState<number | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [message, setMessage] = useState<string>('');
   const { data: session } = useSession();
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      setSelectedFile(file);
       const newFile = { name: file.name, id: Date.now() };
       setFiles((prev) => [...prev, newFile]);
       setActiveFile(newFile.id);
+    }
+  };
 
+  const handleSendFile = async () => {
+    if (selectedFile) {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", selectedFile);
       formData.append("option", selectedOption);
 
       setMessages((prev) => [
         ...prev,
-        { text: `Arquivo "${file.name}" enviado!. Gerando resumo...`, isBot: true },
+        { text: `Arquivo "${selectedFile.name}" enviado!. Gerando resumo...`, isBot: true },
       ]);
 
       try {
-        const route = selectedOption === "Resumir" ? "/summarize" : "/analyze"; // Dependendo da seleção
+        const route = selectedOption === "Resumir" ? "/summarize" : "/analyze";
         const response = await api.post(route, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
@@ -74,12 +81,47 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
           ]);
         }
       } catch (error) {
-        console.error("Erro ao processar arquivo", error);
         setMessages((prev) => [
           ...prev,
           { text: "Erro ao processar o arquivo. Tente novamente.", isBot: true },
         ]);
       }
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (message.trim() !== '') {
+      setMessages([...messages, { text: message, isBot: false }]);
+      const userMessage = message;
+      setMessage('');
+
+      try {
+        if (userMessage.startsWith('Resumo:')) {
+          const textToSummarize = userMessage.replace('Resumo:', '').trim();
+          const response = await api.post('/summarize/message', { message: textToSummarize });
+          const summary = response.data.summary_data.summary_content;
+          setSummary(summary);
+        } else {
+          const response = await api.post('/messages/', { message: userMessage });
+          const botMessage = response.data.message;
+          setMessages(prevMessages => [
+            ...prevMessages,
+            { text: botMessage, isBot: true }
+          ]);
+        }
+      } catch (error) {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { text: 'Erro ao enviar a mensagem. Tente novamente.', isBot: true }
+        ]);
+      }
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage(); 
     }
   };
 
@@ -127,6 +169,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
           </div>
         ))}
       </div>
+      <MessageInput
+        message={message}
+        setMessage={setMessage}
+        handleKeyPress={handleKeyPress}
+        handleSendMessage={handleSendMessage}
+        handleSendFile={handleSendFile}
+        selectedFile={selectedFile}
+        className="p-4 bg-white border-t-2 rounded-sm"
+      />
     </div>
   );
 };

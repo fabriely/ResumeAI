@@ -25,6 +25,18 @@ async def summarize(file: UploadFile = File(...)):
 
     return {"summary_data": summary_data}
 
+@router.post("/summarize/message/")
+async def summarize_message(message: schemas.MessageRequest):
+    text = message.message
+    summary = summarize_text(text)
+    summary_data = {
+        "file_name": "Mensagem de texto resumida",
+        "summary_content": summary,
+        "created_at": datetime.now().isoformat(),
+    }
+
+    return {"summary_data": summary_data}
+
 # Endpoints para adicionar e buscar resumos
 @router.post("/users/{email}/summaries/")
 async def add_summary(email: str, summary_data: schemas.SummaryRequest, db: Session = Depends(dependencies.get_db)):
