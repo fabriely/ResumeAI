@@ -21,7 +21,7 @@ class Summary(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String, index=True)
-    user_email = Column(Integer, ForeignKey("users.email"))
+    user_email = Column(String, ForeignKey("users.email"))
 
     user = relationship("User", back_populates="summaries")
 

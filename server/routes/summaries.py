@@ -55,8 +55,9 @@ async def get_summaries(email: str, db: Session = Depends(dependencies.get_db)):
 
 
 @router.delete("/users/{email}/summaries/{summary_id}/")
-async def delete_summary(email: str, id: int, db: Session = Depends(dependencies.get_db)):
-    success = crud.delete_summary(db=db, email=email, summary_id=id)
+async def delete_summary(email: str, summary_id: int, db: Session = Depends(dependencies.get_db)):
+    success = crud.delete_summary(db=db, email=email, summary_id=summary_id)
     if success:
         return {"message": "Resumo deletado com sucesso."}
     raise HTTPException(status_code=404, detail="Resumo ou usuário não encontrado")
+

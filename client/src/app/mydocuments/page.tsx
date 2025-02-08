@@ -44,6 +44,7 @@ export default function MeusDocumentos() {
     if (confirm("Tem certeza que deseja excluir este resumo?")) {
       try {
         if (session?.user?.email) {
+          console.log(id);
           await api.delete(`/users/${session.user.email}/summaries/${id}`);
           setSummaries(prev => prev.filter(summary => summary.id !== id));
         }

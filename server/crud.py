@@ -44,9 +44,10 @@ def get_summaries(db: Session, email: str):
 def delete_summary(db: Session, email: str, summary_id: int):
     user = db.query(User).filter(User.email == email).first()
     if user:
-        summary_to_delete = db.query(Summary).filter(Summary.id == summary_id, Summary.user_id == user.id).first()
+        summary_to_delete = db.query(Summary).filter(Summary.id == summary_id, Summary.user_email == email).first() 
         if summary_to_delete:
             db.delete(summary_to_delete)
             db.commit()
             return True
     return False
+
