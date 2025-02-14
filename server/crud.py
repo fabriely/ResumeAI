@@ -1,5 +1,5 @@
 # app/crud.py
-from bcrypt import hashpw, gensalt
+from bcrypt import hashpw, gensalt, checkpw
 from sqlalchemy.orm import Session
 from models import User, Summary
 import schemas
@@ -51,3 +51,17 @@ def delete_summary(db: Session, email: str, summary_id: int):
             return True
     return False
 
+def check_password(db: Session, email: str, password: str):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        return checkpw(password.encode('utf-8'), user.password.encode('utf-8'))
+    return False
+
+def update_password(db: Session, email: str, new_password: str):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        hashed_password = hashpw(new_password.encode('utf-8'), gensalt())
+        user.password = hashed_password.decode('utf-8')
+        db.commit()
+        return True
+    return False
