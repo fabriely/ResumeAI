@@ -4,9 +4,11 @@ from typing import List, Dict
 
 class UserBase(BaseModel):
     email: str
-
+    
 class UserCreate(UserBase):
     password: constr(min_length=8)
+    name: str
+    last_name: str
 
     @field_validator('password')
     def password_complexity(cls, v):
@@ -43,3 +45,14 @@ class LoginCredentials(BaseModel):
             raise ValueError('A senha precisa ter pelo menos um caractere especial')
         return v
 
+class PasswordRequest (BaseModel):
+    email: EmailStr
+    password: constr(min_length=8)
+
+    @field_validator('password')
+    def password_complexity(cls, v):
+        if not any(char.isdigit() for char in v):
+            raise ValueError('A senha precisa ter pelo menos um número')
+        if not any(char in '!@#$%^&*(),.?":{}|<>_-+=~`[]\\;\'/' for char in v):
+            raise ValueError('A senha precisa ter pelo menos um caractere especial')
+        return v

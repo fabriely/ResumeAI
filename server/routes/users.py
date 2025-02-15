@@ -31,3 +31,17 @@ async def get_user(email: str, db: Session = Depends(dependencies.get_db)):
     if user:
         return {"data": {"user": user}}
     raise HTTPException(status_code=404, detail="User not found")
+
+@router.post("/users/checkpassword") 
+async def check_password(request: schemas.PasswordRequest, db: Session = Depends(dependencies.get_db)):
+    print(f"Email: {request.email}")
+    print(f"Password: {request.password}")
+    if crud.check_password(db, request.email, request.password):
+        return {"message": "Password is correct"}
+    raise HTTPException(status_code=401, detail="A senha atual está incorreta")
+
+@router.post("/users/{email}/{new_password}")
+async def update_password(email: str, new_password: str, db: Session = Depends(dependencies.get_db) ):
+    if crud.update_password(db, email, new_password):
+        return {"message": "Password updated successfully"}
+    raise HTTPException(status_code=404, detail="User not found")
