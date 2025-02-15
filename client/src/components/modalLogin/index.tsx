@@ -25,6 +25,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
     setPasswordVisible((prev) => !prev);
   };
 
+  const goToRegister = () => {
+    router.push("/register");
+    onClose();
+  };
+
   const handleLogin = async () => {
     try {
       const emailValidation = validateEmail(email);
@@ -128,7 +133,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             >
               Login
             </Button>
-            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] text-black">
+            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] text-black"
+              onClick={goToRegister}
+            >
               Cadastre-se Agora
             </Button>
             <div className="text-center">
