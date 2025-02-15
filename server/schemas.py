@@ -7,6 +7,8 @@ class UserBase(BaseModel):
     
 class UserCreate(UserBase):
     password: constr(min_length=8)
+    name: str
+    last_name: str
 
     @field_validator('password')
     def password_complexity(cls, v):

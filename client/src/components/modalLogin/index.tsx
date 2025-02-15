@@ -44,6 +44,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           redirect: false,
           email: email,
           password: password,
+          name: "",
+          last_name: "",
         });
 
         if (result?.error) {

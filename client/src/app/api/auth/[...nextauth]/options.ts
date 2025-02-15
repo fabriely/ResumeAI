@@ -9,12 +9,16 @@ export const nextAuthOptions: NextAuthOptions = {
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' },
+        name: { label: 'Name', type: 'text' },
+        last_name: { label: 'Last Name', type: 'text' }
       },
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       async authorize(credentials, req) {
         const response = await api.post('/sessions', {
+          name: credentials?.name,
+          last_name: credentials?.last_name,
           email: credentials?.email,
           password: credentials?.password
         });
