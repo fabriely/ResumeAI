@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Resumir, Analisar, OCR } from '../../assets';
+import { Resumir, Analisar } from '../../assets';
 import Image from 'next/image';
 
 interface FileSectionProps {
@@ -28,7 +28,6 @@ const FileSection: React.FC<FileSectionProps> = ({ selectedOption, setSelectedOp
             <span className="flex items-center">
               {selectedOption === 'Resumir' && <Image src={Resumir} alt="Resumir Icon" width={26} height={26} className="mr-2" />}
               {selectedOption === 'Analisar' && <Image src={Analisar} alt="Analisar Icon" width={24} height={24} className="mr-2" />}
-              {selectedOption === 'OCR' && <Image src={OCR} alt="OCR Icon" width={24} height={24} className="mr-2" />}
               {selectedOption}
             </span>
             <span className="ml-2">{isOpen ? '▲' : '▼'}</span>
@@ -43,10 +42,6 @@ const FileSection: React.FC<FileSectionProps> = ({ selectedOption, setSelectedOp
               <div className="flex items-center px-4 py-2 text-black cursor-pointer hover:bg-gray-100" onClick={() => handleOptionChange('Analisar')}>
                 <Image src={Analisar} alt="Analisar Icon" width={24} height={24} className="mr-2" />
                 Analisar
-              </div>
-              <div className="flex items-center px-4 py-2 text-black cursor-pointer hover:bg-gray-100" onClick={() => handleOptionChange('OCR')}>
-                <Image src={OCR} alt="OCR Icon" width={24} height={24} className="mr-2" />
-                OCR
               </div>
             </div>
           )}
