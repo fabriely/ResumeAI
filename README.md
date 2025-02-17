@@ -3,7 +3,10 @@
 Aplicação web integrada com IA (OpenAI) que tem a funcionalidade de resumir e analisar dados gerando um gráfico de um arquivo submetido pelo usuário. 
 
 # Conteúdos 
-[Instruções](https://github.com/PedroCLins/ResumeAI/edit/main/README.md#instru%C3%A7%C3%B5es-para-rodar-o-c%C3%B3digo)
+ 1. [Tecnologias](https://github.com/PedroCLins/ResumeAI/blob/main/README.md#tecnologias)
+ 2. [Instruções](https://github.com/PedroCLins/ResumeAI?tab=readme-ov-file#instru%C3%A7%C3%B5es-para-rodar-o-c%C3%B3digo)
+ 3. [Documentação]()
+ 4. [Visuais]()
 
 # Tecnologias 
 
@@ -55,5 +58,9 @@ uv sync
 fastapi dev main.py
 ````
 O backend estará disponível em http://localhost:8000
+
+# Documentação 
+[Trello](https://trello.com/b/ZaLGktgi/resumeai)
+[Documento de Requisitos](https://docs.google.com/document/d/1sxilAVEbKGqRRhYz66RmxliXYwU-F_Hj-P_-mG4XVyA/edit?usp=sharing)
 
 
