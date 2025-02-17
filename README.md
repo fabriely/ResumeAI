@@ -60,7 +60,14 @@ fastapi dev main.py
 O backend estará disponível em http://localhost:8000
 
 # Documentação 
-[Trello](https://trello.com/b/ZaLGktgi/resumeai)
-[Documento de Requisitos](https://docs.google.com/document/d/1sxilAVEbKGqRRhYz66RmxliXYwU-F_Hj-P_-mG4XVyA/edit?usp=sharing)
+ 1. [Trello](https://trello.com/b/ZaLGktgi/resumeai)
+ 2. [Documento de Requisitos](https://docs.google.com/document/d/1sxilAVEbKGqRRhYz66RmxliXYwU-F_Hj-P_-mG4XVyA/edit?usp=sharing)
+
+# Suporte 
+ 1. [Fabriely Santos - Tech Lead](https://github.com/fabriely)
+ 2. [Pedro Campelo- Developer](https://github.com/PedroCLins)
+ 3. [Kleberson Araújo- Developer](https://github.com/KleberAraujoo)
+ 4. [Danilo Coutinho - Developer](https://github.com/Djco21)
+ 5. [João Pedro Alves - Developer](https://github.com/SunIord)
 
 
