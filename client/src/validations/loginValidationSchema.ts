@@ -3,18 +3,18 @@ import { z } from 'zod';
 // Esquema de validação para o email
 export const emailSchema = z
     .string()
-    .email({ message: "O email precisa ser válido" })
+    .email({ message: "O email precisa ser válido." })
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
-        message: "O email precisa ser válido"
+        message: "O email precisa ser válido."
     });
 
 // Esquema de validação para a senha
 export const passwordSchema = z
     .string()
-    .min(8, { message: "A senha precisa ter pelo menos 8 caracteres" })
-    .regex(/\d/, { message: "A senha precisa ter pelo menos um número" })
+    .min(8, { message: "A senha precisa ter pelo menos 8 caracteres." })
+    .regex(/\d/, { message: "A senha precisa ter pelo menos um número." })
     .regex(/[!@#$%^&*(),.?":{}|<>_\-+=~`[\]\\;'/]/, {
-        message: "A senha precisa ter pelo menos um caractere especial",
+        message: "A senha precisa ter pelo menos um caractere especial.",
     });
 
 // Função para validar o email
@@ -32,5 +32,5 @@ export const validatePassword = (password: string) => {
     if (!passwordValidation.success) {
         return { success: false, message: passwordValidation.error.errors[0].message };
     }
-    return { success: true };
+    return { success: true, message: "A senha é válida!" };
 };

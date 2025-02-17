@@ -3,12 +3,12 @@ from pydantic import BaseModel, EmailStr, constr, field_validator
 from typing import List, Dict
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
     
 class UserCreate(UserBase):
-    password: constr(min_length=8)
     name: str
     last_name: str
+    password: constr(min_length=8)
 
     @field_validator('password')
     def password_complexity(cls, v):
