@@ -5,8 +5,10 @@ Aplicação web integrada com IA (OpenAI) que tem a funcionalidade de resumir e 
 # Conteúdos 
  1. [Tecnologias](https://github.com/PedroCLins/ResumeAI/blob/main/README.md#tecnologias)
  2. [Instruções](https://github.com/PedroCLins/ResumeAI?tab=readme-ov-file#instru%C3%A7%C3%B5es-para-rodar-o-c%C3%B3digo)
- 3. [Documentação]()
+ 3. [Documentação](https://github.com/PedroCLins/ResumeAI/blob/main/README.md#documenta%C3%A7%C3%A3o)
  4. [Visuais]()
+ 5. [Suporte](https://github.com/PedroCLins/ResumeAI/blob/main/README.md#suporte)
+ 6. [StatusProjeto]()
 
 # Tecnologias 
 
@@ -63,11 +65,16 @@ O backend estará disponível em http://localhost:8000
  1. [Trello](https://trello.com/b/ZaLGktgi/resumeai)
  2. [Documento de Requisitos](https://docs.google.com/document/d/1sxilAVEbKGqRRhYz66RmxliXYwU-F_Hj-P_-mG4XVyA/edit?usp=sharing)
 
+# Visuais 
+
+[Figma]()
+
 # Suporte 
  1. [Fabriely Santos - Tech Lead](https://github.com/fabriely)
- 2. [Pedro Campelo- Developer](https://github.com/PedroCLins)
- 3. [Kleberson Araújo- Developer](https://github.com/KleberAraujoo)
+ 2. [Pedro Campelo - Developer](https://github.com/PedroCLins)
+ 3. [Kleberson Araújo - Developer](https://github.com/KleberAraujoo)
  4. [Danilo Coutinho - Developer](https://github.com/Djco21)
  5. [João Pedro Alves - Developer](https://github.com/SunIord)
 
-
+# Status do Projeto 
+Em desenvolvimento para finalizar o MVP 
