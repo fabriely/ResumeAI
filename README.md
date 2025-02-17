@@ -8,7 +8,7 @@ Aplicação web integrada com IA (OpenAI) que tem a funcionalidade de resumir e 
  3. [Documentação](https://github.com/PedroCLins/ResumeAI/blob/main/README.md#documenta%C3%A7%C3%A3o)
  4. [Visuais]()
  5. [Suporte](https://github.com/PedroCLins/ResumeAI/blob/main/README.md#suporte)
- 6. [StatusProjeto]()
+ 6. [StatusProjeto](https://github.com/PedroCLins/ResumeAI/blob/main/README.md#status-do-projeto)
 
 # Tecnologias 
 
