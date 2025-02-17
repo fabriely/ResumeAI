@@ -1,5 +1,13 @@
 # ResumeAI
-Aplicação web que tem a funcionalidade de resumir e analisar dados de um arquivo submetido pelo usuário. 
+
+Aplicação web integrada com IA (OpenAI) que tem a funcionalidade de resumir e analisar dados gerando um gráfico de um arquivo submetido pelo usuário. 
+
+# Conteúdos 
+[Instruções](https://github.com/PedroCLins/ResumeAI/edit/main/README.md#instru%C3%A7%C3%B5es-para-rodar-o-c%C3%B3digo)
+
+# Tecnologias 
+
+Projeto desenvolvido com React + TypeScript para FrontEnd e Python + Uvicorn + FastAPI para BackEnd
 
 # Instruções para Rodar o Código
 
@@ -7,7 +15,7 @@ Este projeto possui duas partes: **client** (frontend) e **server** (backend). S
 
 ## Pré-requisitos
 
-Certifique-se de ter o [pnpm](https://pnpm.io/) instalado para o frontend e [FastAPI](https://fastapi.tiangolo.com/) e [uvicorn](https://www.uvicorn.org/) para o backend.
+Certifique-se de ter o [nodejs](https://nodejs.org/pt), [pnpm](https://pnpm.io/) instalado para o frontend e [FastAPI](https://fastapi.tiangolo.com/) e [uvicorn](https://www.uvicorn.org/) para o backend.
 
 ## Configuração do Arquivo `.env`
 
