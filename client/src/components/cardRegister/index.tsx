@@ -6,6 +6,7 @@ import { Input } from "components/ui/input";
 import { Label } from "components/ui/label";
 import { Checkbox } from '@mui/material';
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react"; 
 import { validateEmail, validatePassword} from "../../validations/loginValidationSchema";
 import { boolean, string } from "zod";
 
@@ -15,9 +16,19 @@ const FormRegister = () => {
     const [last_name, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [boxChecked, setBoxChecked] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible((prev) => !prev);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setConfirmPasswordVisible((prev) => !prev);
+    };
 
     const handleSendRegisterCredentials = async () => {
         try {
@@ -80,7 +91,8 @@ const FormRegister = () => {
                 <CardContent className="overflow-auto flex flex-col gap-4 p-4 -mt-8">
                     <div className="grid gap-2 justify-center">
                         <Label className="text-black font-bold" htmlFor="Nome"> Nome </Label>
-                        <Input className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
+                        <Input 
+                            className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
                             id="name"
                             type="name"
                             placeholder="João"
@@ -91,7 +103,8 @@ const FormRegister = () => {
                     </div>
                     <div className="grid gap-2 justify-center">
                         <Label className="text-black font-bold" htmlFor="Sobrenome"> Sobrenome </Label>
-                        <Input className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
+                        <Input 
+                            className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
                             id="last_name"
                             type="last_name"
                             placeholder="Silva"
@@ -102,7 +115,8 @@ const FormRegister = () => {
                     </div>
                     <div className="grid gap-2 justify-center">
                         <Label className="text-black font-bold" htmlFor="Email"> Email </Label>
-                        <Input className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
+                        <Input 
+                            className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
                             id="email"
                             type="email"
                             placeholder="email@example.com"
@@ -113,28 +127,49 @@ const FormRegister = () => {
                     </div>
                     <div className="grid gap-2 justify-center">
                         <Label className="text-black font-bold" htmlFor="Senha"> Senha </Label>
-                        <Input className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        ></Input>
+                        <div className="relative w-[324px]">
+                            <Input 
+                                className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
+                                id="password"
+                                type={passwordVisible ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            ></Input>
+                            <button
+                                type="button"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-900"
+                                onClick={togglePasswordVisibility}
+                            >
+                                {passwordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
                     <div className="grid gap-2 justify-center">
                         <Label className="text-black font-bold" htmlFor="Confirmar Senha"> Confirmar Senha </Label>
-                        <Input className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
-                            id="confirmPassword"
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                        ></Input>
+                        <div className="relative w-[324px]">
+                            <Input 
+                                className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
+                                id="confirmPassword"
+                                type={confirmPasswordVisible ? "text" : "password"}
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            ></Input>
+                            <button
+                                type="button"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-900"
+                                onClick={toggleConfirmPasswordVisibility}
+                            >
+                                {confirmPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
                     <div className="flex gap-2 justify-center">
                         <div className="grid gap-2 justify-evenly">
                             <Label className="text-black font-bold" htmlFor="Insira o Código"> Insira o código </Label>
-                            <Input className="bg-white border-2 border-[#004BD4] w-[190px] h-[47px] rounded-[16px]"
+                            <Input 
+                                className="bg-white border-2 border-[#004BD4] w-[190px] h-[47px] rounded-[16px]"
                                 id="code"
                                 type="code"
                                 placeholder="000000"
@@ -161,8 +196,10 @@ const FormRegister = () => {
                             <p className="text-red-500 w-[324px] text-sm mt-0">{errorMessage}</p>)}
                     </div>
                     <div className="flex gap-2 justify-around items-center">
-                        <Button className="w-[324px] h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
+                        <Button 
+                            className="w-[324px] h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
                             onClick={handleRegister}
+                            disabled={!name || !last_name || !email || !password || !confirmPassword || !boxChecked}
                         > Confirmar e Continuar </Button>
                     </div>
                 </CardContent>
