@@ -90,6 +90,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
   };
 
   const handleSendMessage = async () => {
+    if (!session) {
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { text: 'Você precisa estar logado para enviar mensagens.', isBot: true }
+      ]);
+      return;
+    } else 
     if (message.trim() !== '') {
       setMessages([...messages, { text: message, isBot: false }]);
       const userMessage = message;
