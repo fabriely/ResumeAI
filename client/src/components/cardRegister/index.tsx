@@ -7,7 +7,11 @@ import { Label } from "components/ui/label";
 import { Checkbox } from '@mui/material';
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react"; 
-import { validateEmail, validatePassword} from "../../validations/loginValidationSchema";
+import { 
+    validateEmail, 
+    validatePassword, 
+    verifyExistingEmail, 
+} from "../../validations/loginValidationSchema";
 import { boolean, string } from "zod";
 
 const FormRegister = () => {
@@ -43,7 +47,7 @@ const FormRegister = () => {
                 router.push("/chatbot");
             }
         } catch (error) {
-            setErrorMessage("An unexpected error occurred. Please try again.");
+            setErrorMessage("Um erro inesperado ocorreu. Por favor, tente novamente.");
             console.error(error);
         }
     };
@@ -52,30 +56,36 @@ const FormRegister = () => {
         try {
             const emailValidation = validateEmail(email);
             if (!emailValidation.success) {
-                setErrorMessage("Insira um email válido.");
+                setErrorMessage(emailValidation.message);
                 return;
             }
 
+            const emailVerification = verifyExistingEmail(email);
+            if (!(await emailVerification).success) {
+                setErrorMessage((await emailVerification).message);
+                return;
+            }
+        
             const passwordValidation = validatePassword(password);
             if (!passwordValidation.success) {
                 setErrorMessage(passwordValidation.message);
                 return;
             }
-
+        
             if (emailValidation.success && passwordValidation.success) {
-                if (password !== confirmPassword) {
-                    setErrorMessage("A senha e a confirmação de senha precisam ser iguais.");
+                if (password != confirmPassword) {
+                    setErrorMessage("A Senha e a Confirmação de Senha precisam ser iguais.")
                 } else {
                     await handleSendRegisterCredentials();
                 }
-            }
-
+            };
+        
             if (!boxChecked) {
                 setErrorMessage("Você deve concordar com os Termos de Serviço e Política de Privacidade.");
                 return;
             }
         } catch (error) {
-            setErrorMessage("An unexpected error occurred. Please try again.");
+            setErrorMessage("Um erro inesperado ocorreu. Por favor, tente novamente.");
             console.error(error);
         }
     };
