@@ -144,7 +144,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
               <span className="text-[#B3B3B3]">ou</span>
             </div>
 
-            <Button className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black">
+            <Button
+              className="w-full h-[47px] rounded-[24px] bg-[#F0F0F0] flex items-center justify-center text-black"
+              onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/chatbot" })} // Redireciona após login
+            >
               <Image width={20} src={Google} alt="Google Icon" className="mr-2" />
               Continue com Google
             </Button>
