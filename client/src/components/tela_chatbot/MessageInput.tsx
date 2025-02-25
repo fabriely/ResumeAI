@@ -44,7 +44,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
           }}
           onKeyDown={handleKeyPress}
           className="w-full p-2 rounded bg-white text-black outline-none focus:ring-0 resize-none"
-          placeholder={selectedFile ? `Resuma o arquivo ${selectedFile.name} para mim.` : "Digite sua mensagem..."}
+          placeholder={selectedFile ? `Resuma/Analise o arquivo ${selectedFile.name} para mim.` : "Digite sua mensagem..."}
           style={{ height: '100px' }}
         />
         <button
