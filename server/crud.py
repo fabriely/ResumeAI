@@ -1,7 +1,7 @@
 # app/crud.py
 from bcrypt import hashpw, gensalt, checkpw
 from sqlalchemy.orm import Session
-from models import User, Summary
+from models import User, Summary, Analysis
 import schemas
 import json
 
@@ -64,4 +64,29 @@ def update_password(db: Session, email: str, new_password: str):
         user.password = hashed_password.decode('utf-8')
         db.commit()
         return True
+    return False
+
+def add_analysis(db: Session, email: str, analysis_data: schemas.AnalysisRequest):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        analysis_content = json.dumps(analysis_data.content)
+        new_analysis = Analysis(content=analysis_content)
+        user.analyses.append(new_analysis)
+        db.commit()
+        db.refresh(user)
+        return user
+    return None
+
+def get_analyses(db: Session, email: str):
+    user = db.query(User).filter(User.email == email).first()
+    return user.analyses if user else None
+
+def delete_analysis(db: Session, email: str, analysis_id: int):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        analysis_to_delete = db.query(Analysis).filter(Analysis.id == analysis_id, Analysis.user_email == email).first()
+        if analysis_to_delete:
+            db.delete(analysis_to_delete)
+            db.commit()
+            return True
     return False
