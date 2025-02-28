@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "services/api";
 import { useSession } from "next-auth/react";
-import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
+import { Plus, X } from "lucide-react";
 import MessageInput from "./MessageInput";
 
 
@@ -14,10 +14,10 @@ interface ChatSectionProps {
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, className, setMessages, setSummary }) => {
-  const [files, setFiles] = useState<{ name: string; id: number }[]>([]);
+  const [files, setFiles] = useState<{ name: string; id: number; file: File }[]>([]);
   const [activeFile, setActiveFile] = useState<number | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string>('');
+  const [summaries, setSummaries] = useState<{ [key: number]: string }>({});
   const { data: session } = useSession();
   const key = String(selectedOption) as keyof typeof states_dictionary;
   let states_dictionary={ 
@@ -28,75 +28,80 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      setSelectedFile(file);
-      const newFile = { name: file.name, id: Date.now() };
+      const newFile = { name: file.name, id: Date.now(), file };
       setFiles((prev) => [...prev, newFile]);
       setActiveFile(newFile.id);
+      e.target.value = ''; // Reset the file input value
     }
   };
 
   const handleSendFile = async () => {
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("option", selectedOption);
-      setMessages((prev) => [
-        ...prev,
-        { text: `Arquivo "${selectedFile.name}" enviado!. Gerando "${states_dictionary[key][0]}"...`, isBot: true },
-      ]);
-      setSelectedFile(null);
+    if (activeFile !== null) {
+      const selectedFile = files.find(file => file.id === activeFile)?.file;
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append("option", selectedOption);
 
-      try {
-        const route = selectedOption === "Resumir" ? "/summarize" : "/analyze";
-        const response = await api.post(route, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        setMessages((prev) => [
+          ...prev,
+          { text: `Arquivo "${selectedFile.name}" enviado!. Gerando "${states_dictionary[key][0]}"...`, isBot: true },
+        ]);
 
-        if (selectedOption === "Analisar") {
-          const analysis = response.data.image_base64;
+        try {
+          const route = selectedOption === "Resumir" ? "/summarize" : "/analyze";
+          const response = await api.post(route, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
 
-          const imageElement = document.createElement("img");
-          imageElement.src = `data:image/png;base64,${analysis}`;
+          if (selectedOption === "Analisar") {
+            const analysis = response.data.image_base64;
 
-          document.getElementById("image-container")?.appendChild(imageElement);
-          setSummary(analysis);
+            const imageElement = document.createElement("img");
+            imageElement.src = `data:image/png;base64,${analysis}`;
 
-          setMessages((prev) => [
+            document.getElementById("image-container")?.appendChild(imageElement);
+            setSummary(analysis);
+            setSummaries((prev) => ({ ...prev, [activeFile]: analysis }));
+  
+            setMessages((prev) => [
             ...prev,
             { text: `Resultado gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
           ]);
 
         } else if (selectedOption === "Resumir") {
-          // Condicional para garantir que só processe um resumo
-          const summary = response.data.summary_data;
-          if (summary && summary.summary_content) {
-            setSummary(summary.summary_content);
+            // Condicional para garantir que só processe um resumo
+            const summary = response.data.summary_data;
+            if (summary && summary.summary_content) {
+              setSummary(summary.summary_content);
+              setSummaries((prev) => ({ ...prev, [activeFile]: summary.summary_content }));
 
-            // Enviar o resumo para o backend e associar ao perfil do usuário
-            if (session?.user?.email) {
-              await api.post(`/users/${session.user.email}/summaries/`, { content: summary });
-              setMessages((prev) => [
-                ...prev,
-                { text: `Resultado gerado para o arquivo, veja ao lado!`, isBot: true },
-              ]);
-            } else {
-              setMessages((prev) => [
-                ...prev,
-                { text: `Resultado gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
-              ]);
+              // Enviar o resumo para o backend e associar ao perfil do usuário
+              if (session?.user?.email) {
+                await api.post(`/users/${session.user.email}/summaries/`, { content: summary });
+                setMessages((prev) => [
+                  ...prev,
+                  { text: `Resultado gerado para o arquivo, veja ao lado!`, isBot: true },
+                ]);
+              } else {
+                setMessages((prev) => [
+                  ...prev,
+                  { text: `Resultado gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
+                ]);
+              }
             }
+          } else {
+            setMessages((prev) => [
+              ...prev,
+              { text: "Nenhum resumo gerado. Tente novamente.", isBot: true },
+            ]);
           }
-        } else {
+        } catch (error) {
           setMessages((prev) => [
             ...prev,
-            { text: "Nenhum resumo gerado. Tente novamente.", isBot: true },
+            { text: "Erro ao processar o arquivo. Tente novamente.", isBot: true },
           ]);
         }
-      } catch (error) {
-        setMessages((prev) => [
-          ...prev,
-          { text: "Erro ao processar o arquivo. Tente novamente.", isBot: true },
-        ]);
       }
     }
   };
@@ -137,6 +142,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
     }
   };
 
+  const handleCloseFile = (fileId: number) => {
+    setFiles((prev) => prev.filter((f) => f.id !== fileId));
+    setActiveFile((prevState: number | null) => {
+      const remainingFiles = files.filter((f) => f.id !== fileId);
+      if (remainingFiles.length > 0) {
+        const nextActiveFile = remainingFiles[0].id;
+        setSummary(summaries[nextActiveFile] || "");
+        return nextActiveFile;
+      } else {
+        setSummary("");
+        return null;
+      }
+    });
+  };
+
   return (
     <div className={`${className} flex flex-col h-full rounded-lg`}>
       <div className="flex items-center justify-between px-4 py-2 bg-gray-100 ">
@@ -145,26 +165,28 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
             <div
               key={file.id}
               className={`flex items-center space-x-2 px-4 py-1 rounded-t-md cursor-pointer ${activeFile === file.id ? "bg-gray-200 shadow-sm text-black" : "bg-gray-50 text-gray-500"}`}
-              onClick={() => setActiveFile(file.id)}
+              onClick={() => {
+                setActiveFile(file.id);
+                setSummary(summaries[file.id] || "");
+              }}
             >
               <span className="text-sm">{file.name}</span>
               <button
                 className="text-black hover:text-black-500"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setFiles((prev) => prev.filter((f) => f.id !== file.id));
-                  setActiveFile((prev) => (files.length > 1 ? files[0].id : null));
+                  handleCloseFile(file.id);
                 }}
               >
-                <AiOutlineClose size={14} />
+                <X size={14} />
               </button>
             </div>
           ))}
           <button
-            className="flex items-center justify-center w-8 h-8 bg-purple-600 text-white rounded-full"
+            className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA] text-white rounded-full"
             onClick={() => document.getElementById("file-input")?.click()}
           >
-            <AiOutlinePlus size={20} />
+            <Plus size={20} />
           </button>
         </div>
         <input id="file-input" type="file" className="hidden" onChange={handleFileChange} />
@@ -187,10 +209,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
         handleKeyPress={handleKeyPress}
         handleSendMessage={handleSendMessage}
         handleSendFile={handleSendFile}
-        selectedFile={selectedFile}
+        activeFile={activeFile}
+        files={files}
         className="p-4 bg-white border-t-2 rounded-sm"
       />
-    </div>
+          </div>
   );
 };
 
