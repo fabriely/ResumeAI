@@ -67,7 +67,7 @@ export default function RedefinePassword() {
                     </p>
                 </div>
                 <div className="flex flex-col space-y-2">
-                    <Label className="text-black text-base font-bold" htmlFor="Endereço de Email">Endereço de Email</Label>
+                    <Label className="text-black text-base font-bold" htmlFor="Endereço de Email">Nova Senha</Label>
                     <div className="relative">
                         <Input
                             className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
