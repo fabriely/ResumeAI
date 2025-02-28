@@ -12,7 +12,6 @@ import {
     validatePassword, 
     verifyExistingEmail, 
 } from "../../validations/loginValidationSchema";
-import { boolean, string } from "zod";
 
 const FormRegister = () => {
     const router = useRouter();
@@ -44,7 +43,7 @@ const FormRegister = () => {
             });
 
             if (response.status === 200) {
-                router.push("/chatbot");
+                router.push("/register/success");
             }
         } catch (error) {
             setErrorMessage("Um erro inesperado ocorreu. Por favor, tente novamente.");
@@ -91,14 +90,14 @@ const FormRegister = () => {
     };
 
     return (
-        <div className="flex justify-around items-center p-24">
-            <Card className="w-[400px] bg-white relative">
-                <CardHeader>
-                    <h2 className="text-black font-bold flex justify-around items-center text-2xl">
+        <div className="flex justify-center h-screen bg-gray-100 pt-24 pb-8 px-40">
+            <Card className="max-w-fit max-h-fit p-8 space-y-8 bg-white relative shadow-md border-none">
+                <CardHeader className="p-0 max-w-[324px]">
+                    <h2 className="text-black font-bold text-2xl text-center">
                         Crie Sua Conta ResumeAI!
                     </h2>
                 </CardHeader>
-                <CardContent className="overflow-auto flex flex-col gap-4 p-4 -mt-8">
+                <CardContent className="overflow-auto flex flex-col gap-4 p-0 max-w-[324px]">
                     <div className="grid gap-2 justify-center">
                         <Label className="text-black font-bold" htmlFor="Nome"> Nome </Label>
                         <Input 
@@ -207,7 +206,7 @@ const FormRegister = () => {
                     </div>
                     <div className="flex gap-2 justify-around items-center">
                         <Button 
-                            className="w-[324px] h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
+                            className="w-full h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
                             onClick={handleRegister}
                             disabled={!name || !last_name || !email || !password || !confirmPassword || !boxChecked}
                         > Confirmar e Continuar </Button>

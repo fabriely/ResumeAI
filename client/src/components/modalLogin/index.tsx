@@ -26,9 +26,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   };
 
   const goToRegister = () => {
-    router.push("/register");
+    router.push("/register/form");
     onClose();
   };
+
+  const goToRedefinePassword = () => {
+    router.push("/redefine-password/verify-email")
+    onClose();
+  }
 
   const handleLogin = async () => {
     try {
@@ -124,7 +129,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                   <p className="text-red-500 text-sm mt-0">{errorMessage}</p>
                 )}
               <div className="text-center">
-                <span className="text-black font-[Roboto] cursor-pointer hover:underline">
+                <span className="text-black font-[Roboto] cursor-pointer hover:underline"
+                  onClick={goToRedefinePassword}>
                   Esqueci minha senha
                 </span>
               </div>
