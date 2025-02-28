@@ -4,7 +4,8 @@ generativeai.*
 file_reader_test.py
 __pycache__
 
-routes/__pycache__
+server/__pycache__
+server/routes/__pycache__
 
 .venv 
 test.db

@@ -1,7 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import Image from 'next/image';
-import Send from '../../assets/Send.png';
+import { Send } from 'lucide-react';
 
 interface MessageInputProps {
   message: string;
@@ -9,12 +8,14 @@ interface MessageInputProps {
   handleKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   handleSendMessage: () => void;
   handleSendFile: () => void;
-  selectedFile: File | null;
+  activeFile: number | null;
+  files: { name: string; id: number }[];
   className?: string;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handleKeyPress, handleSendMessage, handleSendFile, selectedFile, className }) => {
+const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handleKeyPress, handleSendMessage, handleSendFile, activeFile, files, className }) => {
   const [error, setError] = useState<string | null>(null);
+  const activeFileName = files.find(file => file.id === activeFile)?.name;
 
   const validateAndSend = () => {
     if (message.trim() === '') { 
@@ -40,18 +41,18 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
           value={message}
           onChange={(e) => {
             setMessage(e.target.value);
-            setError(null); 
+            setError(null);
           }}
           onKeyDown={handleKeyPress}
           className="w-full p-2 rounded bg-white text-black outline-none focus:ring-0 resize-none"
-          placeholder={selectedFile ? `Resuma o arquivo ${selectedFile.name} para mim.` : "Digite sua mensagem..."}
+          placeholder={activeFile ? `Resuma/Analise o arquivo ${activeFileName} para mim.` : "Digite sua mensagem..."}
           style={{ height: '100px' }}
         />
         <button
           onClick={handleSend}
-          className="w-16 h-8 text-white rounded transition-all flex items-center justify-center"
+          className="min-w-12 max-w-12 min-h-12 max-h-12 bg-gradient-to-r m-0 from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA] text-white rounded-full transition-all flex items-center justify-center"
         >
-          <Image src={Send} alt="Send Icon" className="w-8 h-8" />
+          <Send className="w-6 h-6" />
         </button>
       </div>
       {error && <p className="text-red-500 text-sm font-semibold">{error}</p>}
