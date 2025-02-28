@@ -24,6 +24,9 @@ const FormRegister = () => {
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [boxChecked, setBoxChecked] = useState(false);
+    const [code, setCode] = useState("");
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isCooldown, setIsCooldown] = useState(false);
 
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
@@ -51,6 +54,22 @@ const FormRegister = () => {
         }
     };
 
+    const handleVerifyCode = async () => {
+        try {
+            const response = await api.post("/users/checkcode", { email, code });
+            if (response.status === 200) {
+                return true;
+            } else {
+                setErrorMessage("Código de verificação inválido.");
+                return false;
+            }
+        } catch (error) {
+            setErrorMessage("Falha ao verificar o código de verificação. Por favor, tente novamente.");
+            console.error(error);
+            return false;
+        }
+    };
+
     const handleRegister = async () => {
         try {
             const emailValidation = validateEmail(email);
@@ -75,7 +94,10 @@ const FormRegister = () => {
                 if (password != confirmPassword) {
                     setErrorMessage("A Senha e a Confirmação de Senha precisam ser iguais.")
                 } else {
-                    await handleSendRegisterCredentials();
+                    const isCodeValid = await handleVerifyCode();
+                    if (isCodeValid) {
+                        await handleSendRegisterCredentials();
+                    }
                 }
             };
         
@@ -85,6 +107,23 @@ const FormRegister = () => {
             }
         } catch (error) {
             setErrorMessage("Um erro inesperado ocorreu. Por favor, tente novamente.");
+            console.error(error);
+        }
+    };
+
+    const handleSendCode = async () => {
+        try {
+            setErrorMessage("");
+            const response = await api.post("/users/sendcode", { email });
+            if (response.status === 200) {
+                setIsCodeSent(true);
+                setIsCooldown(true);
+                setTimeout(() => setIsCooldown(false), 60000); // 1 minute cooldown
+            } else {
+                setErrorMessage("Falha ao enviar o código de verificação. Por favor, tente novamente.");
+            }
+        } catch (error) {
+            setErrorMessage("Falha ao enviar o código de verificação. Por favor, tente novamente.");
             console.error(error);
         }
     };
@@ -111,7 +150,7 @@ const FormRegister = () => {
                         ></Input>
                     </div>
                     <div className="grid gap-2 justify-center">
-                        <Label className="text-black font-bold" htmlFor="Sobrenome"> Sobrenome </Label>
+                        <Label className="text-black font-bold" htmlFor="Sobrenome"> Sobrenome </ Label>
                         <Input 
                             className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
                             id="last_name"
@@ -123,7 +162,7 @@ const FormRegister = () => {
                         ></Input>
                     </div>
                     <div className="grid gap-2 justify-center">
-                        <Label className="text-black font-bold" htmlFor="Email"> Email </Label>
+                        <Label className="text-black font-bold" htmlFor="Email"> Email </ Label>
                         <Input 
                             className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
                             id="email"
@@ -135,7 +174,7 @@ const FormRegister = () => {
                         ></Input>
                     </div>
                     <div className="grid gap-2 justify-center">
-                        <Label className="text-black font-bold" htmlFor="Senha"> Senha </Label>
+                        <Label className="text-black font-bold" htmlFor="Senha"> Senha </ Label>
                         <div className="relative w-[324px]">
                             <Input 
                                 className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
@@ -155,7 +194,7 @@ const FormRegister = () => {
                         </div>
                     </div>
                     <div className="grid gap-2 justify-center">
-                        <Label className="text-black font-bold" htmlFor="Confirmar Senha"> Confirmar Senha </Label>
+                        <Label className="text-black font-bold" htmlFor="Confirmar Senha"> Confirmar Senha </ Label>
                         <div className="relative w-[324px]">
                             <Input 
                                 className="bg-white border-2 border-[#004BD4] w-[324px] h-[47px] rounded-[16px]"
@@ -176,19 +215,21 @@ const FormRegister = () => {
                     </div>
                     <div className="flex gap-2 justify-center">
                         <div className="grid gap-2 justify-evenly">
-                            <Label className="text-black font-bold" htmlFor="Insira o Código"> Insira o código </Label>
+                            <Label className="text-black font-bold" htmlFor="Insira o Código"> Insira o código </ Label>
                             <Input 
                                 className="bg-white border-2 border-[#004BD4] w-[190px] h-[47px] rounded-[16px]"
                                 id="code"
-                                type="code"
+                                type="text"
                                 placeholder="000000"
-                                // value={}
-                                // onChange={}
-                                // required
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                required
                             ></Input>
                         </div>
-                        <Button className="w-[120px] h-[47px] rounded-[24px] mt-6 bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
-                            // onClick={}
+                        <Button 
+                            className="w-[120px] h-[47px] rounded-[24px] mt-6 bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
+                            onClick={handleSendCode}
+                            disabled={isCooldown}
                         >
                             Receber Código
                         </Button>
@@ -208,8 +249,8 @@ const FormRegister = () => {
                         <Button 
                             className="w-full h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
                             onClick={handleRegister}
-                            disabled={!name || !last_name || !email || !password || !confirmPassword || !boxChecked}
-                        > Confirmar e Continuar </Button>
+                            disabled={!name || !last_name || !email || !password || !confirmPassword || !code || !boxChecked}
+                        > Confirmar e Continuar </ Button>
                     </div>
                 </CardContent>
             </Card>

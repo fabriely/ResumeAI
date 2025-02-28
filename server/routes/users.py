@@ -1,10 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from bcrypt import checkpw
 from sqlalchemy.orm import Session
 import crud, schemas, dependencies
 from ai_assistant_message import response_message
+from verification_code import send_verification_email
+from datetime import datetime, timedelta
 
 router = APIRouter()
+
+# In-memory cache for verification codes
+verification_codes = {}
 
 @router.post("/users/")
 async def create_user(request: schemas.UserCreate, db: Session = Depends(dependencies.get_db)):
@@ -45,3 +50,38 @@ async def update_password(email: str, new_password: str, db: Session = Depends(d
     if crud.update_password(db, email, new_password):
         return {"message": "Password updated successfully"}
     raise HTTPException(status_code=404, detail="User not found")
+
+@router.post("/users/sendcode")
+async def send_verification_code(request: Request):
+    data = await request.json()
+    email = data.get("email")
+    if not email:
+        raise HTTPException(status_code=422, detail="Email is required")
+    
+    verification_code = send_verification_email(email)
+    if verification_code:
+        # Store the verification code in the in-memory cache with an expiration time
+        expiration_time = datetime.now() + timedelta(minutes=5)  # Code expires in 5 minutes
+        verification_codes[email] = {"code": verification_code, "expires_at": expiration_time}
+        return {"message": "Verification code sent"}
+    raise HTTPException(status_code=500, detail="Failed to send verification code")
+
+@router.post("/users/checkcode")
+async def check_verification_code(request: Request):
+    data = await request.json()
+    email = data.get("email")
+    code = data.get("code")
+    if not email or not code:
+        raise HTTPException(status_code=422, detail="Email and code are required")
+    
+    if email in verification_codes:
+        stored_code_info = verification_codes[email]
+        if datetime.now() < stored_code_info["expires_at"]:
+            if stored_code_info["code"] == code:
+                return {"message": "Verification code is correct"}
+            else:
+                raise HTTPException(status_code=401, detail="Invalid verification code")
+        else:
+            del verification_codes[email]  # Remove expired code
+            raise HTTPException(status_code=401, detail="Verification code has expired")
+    raise HTTPException(status_code=404, detail="Verification code not found")

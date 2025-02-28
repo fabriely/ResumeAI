@@ -7,12 +7,48 @@ import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { verifyExistingEmail } from "validations/loginValidationSchema";
 import { useRouter } from "next/navigation";
+import api from "services/api";
 
 export default function RedefinePassword() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [verificationCode, setVerificationCode] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isCooldown, setIsCooldown] = useState(false);
+
+    const handleSendCode = async () => {
+        try {
+            setErrorMessage("");
+            const response = await api.post("/users/sendcode", { email });
+            if (response.status === 200) {
+                setIsCodeSent(true);
+                setIsCooldown(true);
+                setTimeout(() => setIsCooldown(false), 60000); // 1 minute cooldown
+            } else {
+                setErrorMessage("Falha ao enviar o código de verificação. Por favor, tente novamente.");
+            }
+        } catch (error) {
+            setErrorMessage("Falha ao enviar o código de verificação. Por favor, tente novamente.");
+            console.error(error);
+        }
+    };
+
+    const handleVerifyCode = async () => {
+        try {
+            const response = await api.post("/users/checkcode", { email, code: verificationCode });
+            if (response.status === 200) {
+                return true;
+            } else {
+                setErrorMessage("Código de verificação inválido.");
+                return false;
+            }
+        } catch (error) {
+            setErrorMessage("Falha ao verificar o código de verificação. Por favor, tente novamente.");
+            console.error(error);
+            return false;
+        }
+    };
 
     const handleCheckEmailAndCode = async () => {
         try {
@@ -21,18 +57,16 @@ export default function RedefinePassword() {
                 setErrorMessage("Este endereço de email não possui cadastro.");
                 return;
             }
-            // const codeVerification = TODO;
-                // DO WHEN VERIFICATION CODE IS IMPLEMENTED
-            // }
-            router.push(`/redefine-password/new-password?email=${encodeURIComponent(email)}`);
-
+            const isCodeValid = await handleVerifyCode();
+            if (isCodeValid) {
+                router.push(`/redefine-password/new-password?email=${encodeURIComponent(email)}`);
+            }
         } catch (error) {
             setErrorMessage("Ocorreu um erro inesperado. Por favor, tente novamente.");
             console.error(error);
         }
-    }
+    };
 
-    
     return (
         <div className="flex justify-center h-screen bg-gray-100 pt-24 pb-8 px-40">
             <Header />
@@ -62,7 +96,7 @@ export default function RedefinePassword() {
                         <Input
                             className="bg-white border-2 border-[#004BD4] h-[47px] rounded-[16px]"
                             id="verificationCode"
-                            type="verificationCode"
+                            type="text"
                             placeholder="000000"
                             value={verificationCode}
                             onChange={(e) => setVerificationCode(e.target.value)}
@@ -70,7 +104,8 @@ export default function RedefinePassword() {
                         ></Input>
                         <Button 
                             className="m-0 h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
-                            // onClick={}
+                            onClick={handleSendCode}
+                            disabled={isCooldown}
                         >
                             Receber Código
                         </Button>
