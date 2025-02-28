@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/ca
 import api from "../../services/api";
 import { ClipboardCopy, Trash, Calendar, Download } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Header from "components/tela_chatbot/Header";
+import Header from "components/chatbotScreen/Header";
 import { App as PDFApp } from "components/pdfCreator";
 
 interface Summary {

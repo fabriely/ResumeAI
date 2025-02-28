@@ -1,5 +1,5 @@
 import React from 'react';
-import Main from '../../components/tela_chatbot/Main';
+import Main from '../../components/chatbotScreen/Main';
 
 const ChatbotPage: React.FC = () => {
   return (
