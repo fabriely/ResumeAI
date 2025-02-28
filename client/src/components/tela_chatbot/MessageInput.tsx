@@ -41,7 +41,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
           value={message}
           onChange={(e) => {
             setMessage(e.target.value);
-            setError(null); 
+            setError(null);
           }}
           onKeyDown={handleKeyPress}
           className="w-full p-2 rounded bg-white text-black outline-none focus:ring-0 resize-none"
@@ -50,8 +50,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
         />
         <button
           onClick={handleSend}
-          className="w-12 h-12 bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA] text-white rounded-full transition-all flex items-center justify-center"
-          style={{ width: '48px', height: '48px' }}
+          className="min-w-12 max-w-12 min-h-12 max-h-12 bg-gradient-to-r m-0 from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA] text-white rounded-full transition-all flex items-center justify-center"
         >
           <Send className="w-6 h-6" />
         </button>
