@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 
 interface MessageInputProps {
@@ -8,25 +8,14 @@ interface MessageInputProps {
   handleKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   handleSendMessage: () => void;
   handleSendFile: () => void;
-    activeFile: number | null;
+  activeFile: number | null;
   files: { name: string; id: number }[];
   className?: string;
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handleKeyPress, handleSendMessage, handleSendFile, activeFile, files, className }) => {
   const [error, setError] = useState<string | null>(null);
-  const [placeholder, setPlaceholder] = useState<string>("Digite sua mensagem...");
-
-  useEffect(() => {
-    if (activeFile !== null) {
-      const activeFileName = files.find(file => file.id === activeFile)?.name;
-      if (activeFileName) {
-        setPlaceholder(`Resuma/Analise o arquivo ${activeFileName} para mim.`);
-      } else {
-        setPlaceholder("Digite sua mensagem...");
-      }
-    }
-  }, [activeFile, files]);
+  const activeFileName = files.find(file => file.id === activeFile)?.name;
 
   const validateAndSend = () => {
     if (message.trim() === '') { 
@@ -56,7 +45,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
           }}
           onKeyDown={handleKeyPress}
           className="w-full p-2 rounded bg-white text-black outline-none focus:ring-0 resize-none"
-          placeholder={placeholder}
+          placeholder={activeFile ? `Resuma/Analise o arquivo ${activeFileName} para mim.` : "Digite sua mensagem..."}
           style={{ height: '100px' }}
         />
         <button
