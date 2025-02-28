@@ -47,6 +47,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
           ...prev,
           { text: `Arquivo "${selectedFile.name}" enviado!. Gerando "${states_dictionary[key][0]}"...`, isBot: true },
         ]);
+        setActiveFile(null);
 
         try {
           const route = selectedOption === "Resumir" ? "/summarize" : "/analyze";
