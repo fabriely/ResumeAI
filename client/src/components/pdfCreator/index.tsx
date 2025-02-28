@@ -127,7 +127,7 @@ const renderTextWithBoldAndHeaders = (text: string) => {
       );
     } else if (part.startsWith('##')) {
       elements.push(
-        <Text key={i} style={[styles.h2, styles.jus, styles.boldtify, styles.bold]}>
+        <Text key={i} style={[styles.h2, styles.justify, styles.bold, styles.bold]}>
           {part.slice(2).trim()}
         </Text>
       );
