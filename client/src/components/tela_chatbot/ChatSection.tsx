@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import MessageInput from "./MessageInput";
 
+
 interface ChatSectionProps {
   selectedOption: string;
   messages: { text: string; isBot: boolean }[];
@@ -18,6 +19,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string>('');
   const { data: session } = useSession();
+  const key = String(selectedOption) as keyof typeof states_dictionary;
+  let states_dictionary={ 
+    "Resumir":["resumo"], 
+    "Analisar":["análise"], 
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -34,11 +40,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("option", selectedOption);
-
       setMessages((prev) => [
         ...prev,
-        { text: `Arquivo "${selectedFile.name}" enviado!. Gerando resumo...`, isBot: true },
+        { text: `Arquivo "${selectedFile.name}" enviado!. Gerando "${states_dictionary[key][0]}"...`, isBot: true },
       ]);
+      setSelectedFile(null);
 
       try {
         const route = selectedOption === "Resumir" ? "/summarize" : "/analyze";
@@ -54,6 +60,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
 
           document.getElementById("image-container")?.appendChild(imageElement);
           setSummary(analysis);
+
+          setMessages((prev) => [
+            ...prev,
+            { text: `Resultado gerado para o arquivo, veja ao lado! Qualquer coisa, pode falar, estamos aqui para ajudar`, isBot: true },
+          ]);
+
         } else if (selectedOption === "Resumir") {
           // Condicional para garantir que só processe um resumo
           const summary = response.data.summary_data;
