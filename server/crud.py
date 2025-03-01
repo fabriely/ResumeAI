@@ -1,36 +1,94 @@
-# app/models.py
-from sqlalchemy import Column, String, Integer, ForeignKey
-from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
-import uuid
+# app/crud.py
+from bcrypt import hashpw, gensalt, checkpw
+from sqlalchemy.orm import Session
+from models import User, Summary, Analysis
+import schemas
+import json
 
-Base = declarative_base()
+def create_user(db: Session, name: str, last_name: str, email: str, password: str):
+    # Gerando o salt e o hash da senha
+    hashed_password = hashpw(password.encode('utf-8'), gensalt())
   
-class User(Base):
-    __tablename__ = "users"
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    name = Column(String) 
-    last_name = Column(String)  
-    email = Column(String, unique=True, index=True)
-    password = Column(String)
-    summaries = relationship("Summary", back_populates="user")
+    # Criando o usuário com todas as informações obrigatórias
+    user = User(
+      name = name,
+      last_name = last_name,
+      email = email,
+      password = hashed_password.decode('utf-8')
+    )
+  
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
 
-class Summary(Base):
-    __tablename__ = "summaries"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    content = Column(String, index=True)
-    user_email = Column(String, ForeignKey("users.email"))
+def get_user_by_email(db: Session, email: str):
+    return db.query(User).filter(User.email == email).first()
 
-    user = relationship("User", back_populates="summaries")
+def add_summary(db: Session, email: str, summary_data: schemas.SummaryRequest):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        # Serializando o dicionário para string JSON
+        summary_content = json.dumps(summary_data.content)  
+        new_summary = Summary(content=summary_content)
+        user.summaries.append(new_summary)
+        db.commit()
+        db.refresh(user)
+        return user
+    return None
 
-class Analysis(Base):
-    __tablename__= "analysis"
+def get_summaries(db: Session, email: str):
+    user = db.query(User).filter(User.email == email).first()
+    return user.summaries if user else None
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    file_name = Column(String, nullable=False)
-    file_path = Column(String, nullable=False)
-    user_email = Column(String, ForeignKey("users.email"))
+def delete_summary(db: Session, email: str, summary_id: int):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        summary_to_delete = db.query(Summary).filter(Summary.id == summary_id, Summary.user_email == email).first() 
+        if summary_to_delete:
+            db.delete(summary_to_delete)
+            db.commit()
+            return True
+    return False
 
-    user = relationship("User", backref="analyses")
+def check_password(db: Session, email: str, password: str):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        return checkpw(password.encode('utf-8'), user.password.encode('utf-8'))
+    return False
+
+def update_password(db: Session, email: str, new_password: str):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        hashed_password = hashpw(new_password.encode('utf-8'), gensalt())
+        user.password = hashed_password.decode('utf-8')
+        db.commit()
+        return True
+    return False
+
+def add_analysis(db: Session, email: str, analysis_data: schemas.AnalysisRequest):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        # Serializa o conteúdo da análise para JSON
+        analysis_content = json.dumps(analysis_data.content)
+        # Cria uma nova análise e associa ao usuário
+        new_analysis = Analysis(content=analysis_content, user_email=user.email)
+        db.add(new_analysis)
+        db.commit()
+        db.refresh(new_analysis)
+        return user
+    return None
+
+def get_analyses(db: Session, email: str):
+    user = db.query(User).filter(User.email == email).first()
+    return user.analyses if user else None
+
+def delete_analysis(db: Session, email: str, analysis_id: int):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        analysis_to_delete = db.query(Analysis).filter(Analysis.id == analysis_id, Analysis.user_email == email).first()
+        if analysis_to_delete:
+            db.delete(analysis_to_delete)
+            db.commit()
+            return True
+    return False
