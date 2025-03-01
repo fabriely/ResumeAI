@@ -33,6 +33,12 @@ class MessageRequest(BaseModel):
 class SummariesResponse(BaseModel):
     summaries: List[str]
 
+class AnalysisRequest(BaseModel):
+    content: str 
+
+class AnalysesResponse(BaseModel):
+    analyses: List[str]
+
 class LoginCredentials(BaseModel):
     email: EmailStr
     password: constr(min_length=8)
