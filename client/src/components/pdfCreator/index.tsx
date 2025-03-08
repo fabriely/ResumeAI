@@ -3,11 +3,9 @@ import { Page, Text, View, Document, StyleSheet, Font, PDFViewer, Image } from '
 
 // Register a font with bold style
 Font.register({
-  family: 'Helvetica-Bold',
-  src: 'https://fonts.gstatic.com/s/helvetica/v11/2cddf4e5e4f5e5e4f5e5e4f5e5e4f5e5.ttf',
-  fontWeight: 'bold'
+  family: 'Poppins',
+  src: 'https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJbecmNE.woff2'
 });
-
 // Create styles
 const styles = StyleSheet.create({
   page: {
@@ -32,8 +30,7 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   bold: {
-    fontFamily: 'Helvetica-Bold',
-    fontWeight: 'bold'
+    fontFamily: 'Poppins',
   },
   h1: {
     fontSize: 16,
