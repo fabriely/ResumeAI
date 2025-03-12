@@ -7,7 +7,6 @@ from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
 from dependencies import Base
 from routes import users, summaries, analyze
-import pytest
 
 
 DATABASE_URL = "sqlite:///./test.db"

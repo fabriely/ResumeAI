@@ -8,7 +8,7 @@ import api from "../../services/api";
 import { ClipboardCopy, Trash, Calendar, Download } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Header from "components/chatbotScreen/Header";
-import { App as PDFApp } from "components/pdfCreator";
+import dynamic from "next/dynamic";
 
 interface Summary {
   id: number;
@@ -21,6 +21,8 @@ interface ParsedContent {
   summary_content: string;
   created_at: string;
 }
+
+const PDFApp = dynamic(() => import("components/pdfCreator").then(mod => mod.App), { ssr: false });
 
 export default function MeusDocumentos() {
   const { data: session } = useSession();
