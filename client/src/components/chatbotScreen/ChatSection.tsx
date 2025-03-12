@@ -20,7 +20,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
   const [summaries, setSummaries] = useState<{ [key: number]: string }>({});
   const { data: session } = useSession();
   const key = String(selectedOption) as keyof typeof states_dictionary;
-  let states_dictionary={ 
+  const states_dictionary={ 
     "Resumir":["resumo"], 
     "Analisar":["análise"], 
   };
@@ -144,18 +144,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
   };
 
   const handleCloseFile = (fileId: number) => {
-    setFiles((prev) => prev.filter((f) => f.id !== fileId));
-    setActiveFile((prevState: number | null) => {
-      const remainingFiles = files.filter((f) => f.id !== fileId);
-      if (remainingFiles.length > 0) {
-        const nextActiveFile = remainingFiles[0].id;
-        setSummary(summaries[nextActiveFile] || "");
-        return nextActiveFile;
-      } else {
-        setSummary("");
-        return null;
-      }
-    });
+    const remainingFiles = files.filter((f) => f.id !== fileId);
+    setFiles(remainingFiles);
+    if (remainingFiles.length > 0) {
+      const nextActiveFile = remainingFiles[0].id;
+      setSummary(summaries[nextActiveFile] || "");
+      setActiveFile(nextActiveFile);
+    } else {
+      setSummary("");
+      setActiveFile(null);
+    }
   };
 
   return (

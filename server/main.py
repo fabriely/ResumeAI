@@ -45,14 +45,4 @@ async def login(credentials: LoginCredentials):
 
     return {"success": True, "message": "Login realizado com sucesso!"}
 
-if __name__ == "__main__":
-    print("🔍 Executando testes antes de iniciar o servidor...")
-    result = pytest.main(["-q", "--disable-warnings"])
-
-    if result == 0:
-        print("✅ Todos os testes passaram! Iniciando o servidor...")
-        uvicorn.run(app, host="127.0.0.1", port=8000)
-
-    else:
-        print("❌ Testes falharam! Corrija os erros antes de iniciar o servidor.")
 
