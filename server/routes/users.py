@@ -5,8 +5,8 @@ import services.user_service as crud
 import schemas.user_schema as schemas
 import schemas.summary_schema as summary_schemas
 import dependencies
-from ai_assistant_message import response_message
-from verification_code import send_verification_email
+from services.ai_assistant_message import response_message
+from utils.verification_code import send_verification_email
 from datetime import datetime, timedelta
 
 router = APIRouter()
