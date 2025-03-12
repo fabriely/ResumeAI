@@ -2,7 +2,9 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from datetime import datetime
-import crud, schemas, dependencies
+import schemas.summary_schema as schemas
+import dependencies
+import services.summary_service as crud
 from file_reader_functions import extract_text
 from ai_assistant_summarization import summarize_text
 

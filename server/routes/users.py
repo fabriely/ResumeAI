@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from bcrypt import checkpw
 from sqlalchemy.orm import Session
-import crud, schemas, dependencies
+import services.user_service as crud
+import schemas.user_schema as schemas
+import schemas.summary_schema as summary_schemas
+import dependencies
 from ai_assistant_message import response_message
 from verification_code import send_verification_email
 from datetime import datetime, timedelta
@@ -24,7 +27,7 @@ async def login(request: schemas.UserCreate, db: Session = Depends(dependencies.
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
 @router.post("/messages/")
-async def summarize_message(message: schemas.MessageRequest):
+async def summarize_message(message: summary_schemas.MessageRequest):
     text = message.message
     message = response_message(text)
 

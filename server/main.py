@@ -1,10 +1,10 @@
 # app/main.py
 from fastapi import FastAPI, HTTPException
 from pydantic import ValidationError
-from schemas import LoginCredentials
+from schemas.user_schema import LoginCredentials
 from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
-from models import Base
+from dependencies import Base
 from routes import users, summaries, analyze
 
 DATABASE_URL = "sqlite:///./test.db"
