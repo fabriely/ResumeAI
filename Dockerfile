@@ -41,7 +41,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y curl gnupg && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
-    corepack enable
+    corepack enable && \
+    corepack prepare pnpm@8.8.0 --activate
 
 # Copiar backend e frontend da build anterior
 COPY --from=backend /app/server /app/server
