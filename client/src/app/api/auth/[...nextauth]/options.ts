@@ -18,7 +18,7 @@ export const nextAuthOptions: NextAuthOptions = {
         last_name: { label: 'Last Name', type: 'text' }
       },
 
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const response = await api.post('/sessions', {
           name: credentials?.name,
           last_name: credentials?.last_name,
@@ -48,7 +48,9 @@ export const nextAuthOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      session.user = token.user as any;
+      if (token.user){ 
+        session.user = token.user;
+      }
       return session;
     }
   }

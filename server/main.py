@@ -1,11 +1,13 @@
 # app/main.py
 from fastapi import FastAPI, HTTPException
+import uvicorn
 from pydantic import ValidationError
-from schemas import LoginCredentials
+from schemas.user_schema import LoginCredentials
 from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
-from models import Base
+from dependencies import Base
 from routes import users, summaries, analyze
+
 
 DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -41,3 +43,5 @@ async def login(credentials: LoginCredentials):
         raise HTTPException(status_code=400, detail=e.errors())
 
     return {"success": True, "message": "Login realizado com sucesso!"}
+
+

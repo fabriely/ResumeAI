@@ -7,7 +7,6 @@ import SummaryPanel from './SummaryPanel';
 
 const ChatbotHeader: React.FC = () => {
   const [messages, setMessages] = useState<{ text: string, isBot: boolean }[]>([]);
-  const [message, setMessage] = useState<string>('');
   const [summary, setSummary] = useState<string>(''); // Gerenciar o resumo aqui
   const [selectedOption, setSelectedOption] = useState<string>('Resumir'); // Aqui definimos o estado selecionado para "Resumir"
 
@@ -18,23 +17,6 @@ const ChatbotHeader: React.FC = () => {
     ]);
   }, []);
 
-  const handleSendMessage = () => {
-    if (message.trim() !== '') {
-      setMessages([...messages, { text: message, isBot: false }]);
-      setMessage('');
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { text: 'Estou aqui para ajudar!', isBot: true }
-      ]);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage(); 
-    }
-  };
 
   return (
     <div className="bg-white min-h-screen flex flex-col items-center justify-start">
