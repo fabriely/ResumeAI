@@ -1,24 +1,30 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../../services/api";
 import { Header } from "components";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react"; 
 
 export default function RedefinePassword() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const email = searchParams.get("email") || "";
+    const [email, setEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [newPasswordVisible, setNewPasswordVisible] = useState(false);
     const [confirmNewPasswordVisible, setConfirmNewPasswordVisible] = useState(false);
-    const [isPasswordVerified, setIsPasswordVerified] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            setEmail(params.get("email") || "");
+        }
+    }, []);
+
 
     const toggleNewPasswordVisibility = () => {
         setNewPasswordVisible((prev) => !prev);

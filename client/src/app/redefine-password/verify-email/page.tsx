@@ -21,7 +21,7 @@ export default function RedefinePassword() {
         try {
             setErrorMessage("");
             const response = await api.post("/users/sendcode", { email });
-            if (response.status === 200) {
+            if (response.status === 200 || isCodeSent) {
                 setIsCodeSent(true);
                 setIsCooldown(true);
                 setTimeout(() => setIsCooldown(false), 60000); // 1 minute cooldown

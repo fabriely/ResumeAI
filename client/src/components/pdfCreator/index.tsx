@@ -1,11 +1,13 @@
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet, Font, PDFViewer, Image } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, Font, PDFViewer} from '@react-pdf/renderer';
 
 // Register a font with bold style
 Font.register({
   family: 'Poppins',
   src: 'https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJbecmNE.woff2'
 });
+
+
 // Create styles
 const styles = StyleSheet.create({
   page: {

@@ -3,7 +3,7 @@ from fastapi import APIRouter, UploadFile, File
 from sqlalchemy.orm import Session
 from fastapi.responses import FileResponse
 from file_reader_functions import extract_text
-from ai_assistant_data_visualization import generate_data_visualization
+from services.ai_assistant_data_visualization import generate_data_visualization
 import base64
 
 router = APIRouter()
