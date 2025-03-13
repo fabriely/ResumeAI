@@ -34,7 +34,7 @@ COPY server ./
 ENV DATABASE_URL=sqlite:///./data/database.db
 
 
-# Etapa Final: Criando o Contêiner de Produção
+# Etapa Final: Criando o Contêiner de Produção com Backend e Frontend
 FROM python:3.12-slim
 
 # Criar diretório de trabalho
@@ -51,12 +51,19 @@ RUN apt-get update && apt-get install -y curl gnupg && \
 COPY --from=backend /app/server /app/server
 COPY --from=frontend /app/client/.next /app/client/.next
 COPY --from=frontend /app/client/public /app/client/public
-# Copiar manifest do frontend para que o pnpm funcione
+# Copiar manifest do frontend para garantir que o pnpm funcione corretamente
 COPY --from=frontend /app/client/package.json /app/client/package.json
 COPY --from=frontend /app/client/pnpm-lock.yaml /app/client/pnpm-lock.yaml
 
 # Instalar dependências do backend novamente para evitar problemas
 RUN pip install --no-cache-dir -r /app/server/requirements.txt
+
+# Instalar dependências do frontend para que o "next" seja encontrado
+WORKDIR /app/client
+RUN pnpm install --frozen-lockfile --prod
+
+# Voltar ao diretório raiz do contêiner
+WORKDIR /app
 
 # Expor portas para o frontend e backend
 EXPOSE 3000 8000
