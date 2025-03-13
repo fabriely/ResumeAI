@@ -32,16 +32,19 @@ COPY server ./
 # Definir variável do banco de dados (SQLite)
 ENV DATABASE_URL=sqlite:///./data/database.db
 
-# Etapa Final: Criando o Contêiner de Produção
+# Etapa Final: Criando o Contêiner de Produção com Python e Node.js
 FROM python:3.12-slim
+
+# Atualizar e instalar Node.js e pnpm
+RUN apt-get update && apt-get install -y nodejs npm \
+    && npm install -g corepack && corepack enable && npm install -g pnpm
 
 # Criar diretório de trabalho
 WORKDIR /app
 
 # Copiar backend e frontend da build anterior
 COPY --from=backend /app/server /app/server
-COPY --from=frontend /app/client/.next /app/client/.next
-COPY --from=frontend /app/client/public /app/client/public
+COPY --from=frontend /app/client /app/client
 
 # Instalar dependências do backend novamente para evitar problemas
 RUN pip install --no-cache-dir -r /app/server/requirements.txt
@@ -51,4 +54,4 @@ EXPOSE 3000 8000
 
 # Comando para rodar backend e frontend simultaneamente
 CMD uvicorn server.main:app --host 0.0.0.0 --port 8000 & \
-    pnpm --dir /app/client start
+    cd /app/client && pnpm start
