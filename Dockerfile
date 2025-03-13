@@ -51,4 +51,4 @@ EXPOSE 3000 8000
 
 # Comando para rodar backend e frontend simultaneamente
 CMD uvicorn server.main:app --host 0.0.0.0 --port 8000 & \
-    npx serve -s client/.next -l 3000
+    pnpm --dir /app/client start
