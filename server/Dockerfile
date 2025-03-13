@@ -4,11 +4,14 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY . .
-
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY . .
+
+# Configura a variável para o SQLite persistente
 ENV PYTHONPATH=$PYTHONPATH:/app
+ENV DATABASE_URL=sqlite:///./data/database.db
 
 EXPOSE 8000
 
