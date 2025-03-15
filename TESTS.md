@@ -1,6 +1,11 @@
-# 📌 Documentação de Testes Server 
+# 📌 Documentação de Testes  
 
 Este documento contém a especificação dos casos de teste implementados no projeto.
+
+# Documentação Client
+
+
+# Documentação Server 
 
 ## ✅ Testes Automatizados
 O projeto inclui testes automatizados para garantir a integridade das funcionalidades principais.
