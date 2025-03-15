@@ -1,7 +1,7 @@
-from models.user import User
-import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from models.user import User
+import pytest
 from dependencies import Base
 from services.user_service import create_user, check_user_password
 from utils.security import hash_password
