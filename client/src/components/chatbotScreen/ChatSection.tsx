@@ -212,7 +212,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
         files={files}
         className="p-4 bg-white border-t-2 rounded-sm"
       />
-          </div>
+      </div>
   );
 };
 

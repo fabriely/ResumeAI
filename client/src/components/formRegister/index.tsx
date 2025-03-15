@@ -212,6 +212,9 @@ const FormRegister = () => {
                                 {confirmPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
                         </div>
+                            {password !== confirmPassword && (
+                                <p className="text-red-500 w-[324px] text-sm mt-0">A Senha e a Confirmação de Senha precisam ser iguais.</p>
+                            )}
                     </div>
                     <div className="flex gap-2 justify-center">
                         <div className="grid gap-2 justify-evenly">
