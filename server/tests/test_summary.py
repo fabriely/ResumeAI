@@ -37,6 +37,13 @@ def test_add_summary(db, test_user):
     assert summary.content == '{"title": "Test Summary", "text": "This is a test summary."}'
     assert summary.user_email == test_user.email
 
+def test_add_summary_with_invalid_user(db):
+    """Testa a adição de um resumo com um usuário inválido"""
+    summary_data = SummaryRequest(content={"title": "Test Summary", "text": "This is a test summary."})
+    summary = add_summary(db, "", summary_data) # Usuário inválido
+    assert summary is None  
+    assert db.query(Summary).count() == 0  # Nenhum resumo deve ser adicionado
+
 def test_get_summaries(db, test_user):
     """Testa a recuperação de resumos"""
     summary_data1 = SummaryRequest(content={"title": "Summary 1", "text": "First summary."})
@@ -61,3 +68,9 @@ def test_delete_summary(db, test_user):
 
     summaries = get_summaries(db, test_user.email)
     assert len(summaries) == 0  # Deve estar vazio após a exclusão
+
+def test_delete_summary_with_invalid_user(db):
+    """Testa a exclusão de um resumo com um usuário inválido"""
+    summary_data = SummaryRequest(content={"title": "Delete Me", "text": "This will be deleted."})
+    summary = add_summary(db, "", summary_data)
+    assert delete_summary(db, "", summary.id) is False  # Usuário inválido
