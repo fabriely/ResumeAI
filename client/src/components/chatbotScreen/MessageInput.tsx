@@ -20,7 +20,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
   const validateAndSend = () => {
     if (message.trim() === '') { 
       setError('Por favor, digite uma mensagem ou envie um arquivo.'); 
-    } else {
+    } else {''
       setError(null); 
       handleSendMessage(); 
     }
@@ -33,6 +33,8 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
       validateAndSend();
     }
   };
+  console.log(message)
+  console.log(activeFile)
 
   return (
     <div className={`${className} flex flex-col space-y-2`}>
@@ -55,6 +57,12 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
           <Send className="w-6 h-6" />
         </button>
       </div>
+        {(!message && !activeFile) && (
+          <p className="text-[#761d91] text-sm font-bold">Por favor, digite uma mensagem ou envie um arquivo.</p>
+        )}
+        {(activeFile) && (
+          <p className="text-[#761d91] text-sm font-bold">Clique no botão de enviar para resumir o arquivo.</p>
+        )}
       {error && <p className="text-red-500 text-sm font-semibold">{error}</p>}
     </div>
   );
