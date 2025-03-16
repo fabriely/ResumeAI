@@ -4,6 +4,70 @@ Este documento contém a especificação dos casos de teste implementados no pro
 
 # Documentação Client
 
+### 🚀 Como rodar os testes manualmente?
+Execute o seguinte comando:
+
+```bash
+npm test
+```
+
+## Testes envolvendo botões
+### 🔹 Renderizar botão
+**Descrição:** Verifica se um botão foi renderizado com o texto correto.    
+**Saída esperada:** Botão padrão do sistema com o texto definido pelo teste.
+
+### 🔹 Executar função ao clicar no botão 
+**Descrição:** Verifica se a função desejada foi chamada ao acionar o botão.    
+**Saída esperada:** A função definida é iniciada.
+
+## Testes com o componente de Login
+### 🔹 Logar com campos não preenchidos
+**Descrição:** Verifica se todos os campos foram preenchidos e acusa erro se algum campo está vazio.  
+**Entrada:** Email e senha.  
+**Saída esperada:** Retorna erro indicando que o campo de email ou o campo de senha está vazio.
+
+## Testes na tela de chat
+### 🔹 Digitar mensagem
+**Descrição:** Verifica se a mensagem digitada foi inserida no sistema corrretamente.  
+**Entrada:** Mensagem a ser enviada para o chat.  
+**Saída esperada:** A mensagem deve ser exibida na área de digitação do chat.
+
+### 🔹 Enviar mensagem vazia
+**Descrição:** Verifica se a mensagem a ser enviada tem algum caractere ou se existe algum arquivo anexado.  
+**Saída esperada:** Alerta pedindo para que uma mensagem seja digitada ou um arquivo enviado.  
+
+### 🔹 Executar função de envio de mensagem
+**Descrição:** Verifica se a função de envio de mensagem foi chamada quando uma mensagem com algum caractere é enviada.  
+**Entrada:** Mensagem a ser enviada para o chat.  
+**Saída esperada:** A função handleSendMessage é chamada.
+
+### 🔹 Executar função de envio de arquivo
+**Descrição:** Verifica se a função de envio de arquivo foi chamada quando uma mensagem vazia é enviada e um arquivo está anexado.  
+**Saída esperada:** A função handleSendFile é chamada.
+
+## Testes na tela de cadastro
+### 🔹 Preencher campos de cadastro
+**Descrição:** Verifica se os campos a serem preenchidos na tela de cadastro foram habilitados e possibilitam seu preenchimento.  
+**Entrada:** Nome, sobrenome, e-mail, código de verificação e senha válida.
+**Saída esperada:** Os campos são preenchidos com as informações fornecidas.
+
+### 🔹 Fazer cadastro com senha e confirmação de senha diferentes
+**Descrição:** Verifica se os campos de senha e confirmação de senha são iguais
+**Entrada:** Senha e Confirmação de senha.
+**Saída esperada:** Alerta informando que a senha e a confirmação não coincidem.
+
+### 🔹 Solicitar código de confirmação de email
+**Descrição:** Verifica se o código de confirmação de email é enviado no momento do cadastro
+**Saída esperada:** O código é recebido pelo sistema.
+
+### 🔹 Tentar se cadastrar sem preencher todas as informações
+**Descrição:** Verifica se algum campo da tela de cadastro está vazio.
+**Entrada:** Nome, sobrenome, e-mail, código de verificação e senha válida.
+**Saída esperada:** Desabilita o botão de confirmar e continuar.
+
+### 🔹 Alterar visibilidade da senha
+**Descrição:** Verifica se a senha está visível e passa a não estar visível quando requisitado e vice-versa.
+**Saída esperada:** o campo de senha alterna entre os tipos "text" e "password".
 
 # Documentação Server 
 
