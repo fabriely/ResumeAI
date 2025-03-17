@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { createRoot } from 'react-dom/client';
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import api from "../../services/api";
-import { ClipboardCopy, Trash, Calendar, Download } from "lucide-react";
+import { ClipboardCopy, Trash, Calendar } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Header from "components/chatbotScreen/Header";
-import dynamic from "next/dynamic";
+import Header from "components/tela_chatbot/Header";
 
 interface Summary {
   id: number;
@@ -22,14 +20,14 @@ interface ParsedContent {
   created_at: string;
 }
 
-const PDFApp = dynamic(() => import("components/pdfCreator").then(mod => mod.App), { ssr: false });
-
 export default function MeusDocumentos() {
   const { data: session } = useSession();
   const [summaries, setSummaries] = useState<Summary[]>([]);
 
   useEffect(() => {
-    if (session?.user?.email) {
+    if (!session?.user?.email) {
+      window.location.href = '/chatbot'; 
+    } else {
       api.get(`/users/${session.user.email}/summaries/`)
         .then(response => {
           setSummaries(response.data.summaries);
@@ -54,25 +52,6 @@ export default function MeusDocumentos() {
         }
       } catch (error) {
         console.error("Erro ao excluir resumo", error);
-      }
-    }
-  };
-
-  const handleDownload = async (id: number, summaryContent: string) => {
-    if (session?.user?.email) {
-      console.log(id);
-      // Open a new window and render the PDFViewer with MyDocument
-      const newWindow = window.open('', '_blank');
-      if (newWindow) {
-        newWindow.document.write('<div id="pdf-root"></div>');
-        newWindow.document.close();
-        const pdfRoot = newWindow.document.getElementById('pdf-root');
-        if (pdfRoot) {
-          const root = createRoot(pdfRoot);
-          root.render(<PDFApp id={id} summaryContent={summaryContent} />);
-        } else {
-          console.error("Não foi possível encontrar o arquivo desejado.");
-        }
       }
     }
   };
@@ -113,22 +92,13 @@ export default function MeusDocumentos() {
                     </p>
                   </CardContent>
                   <div className="mt-4 flex justify-between pt-4 pb-2 pl-4 pr-4">
-                    <div className="flex space-x-2">
-                      <Button
-                        onClick={() => handleCopy(parsedContent.summary_content)}
-                        size="sm"
-                        className="bg-[#007aff] text-white hover:bg-blue-700 transition rounded-full"
-                      >
-                        <ClipboardCopy className="w-4 h-4 mr-2" /> Copiar
-                      </Button>
-                      <Button
-                        size="sm"
-                        className="bg-[#007aff] text-white hover:bg-blue-700 transition rounded-full p-2"
-                        onClick={() => handleDownload(id, parsedContent.summary_content)}
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={() => handleCopy(parsedContent.summary_content)}
+                      size="sm"
+                      className="bg-[#007aff] text-white hover:bg-blue-700 transition rounded-full"
+                    >
+                      <ClipboardCopy className="w-4 h-4 mr-2" /> Copiar
+                    </Button>
                     <Button
                       onClick={() => handleDelete(id)}
                       variant="destructive"
