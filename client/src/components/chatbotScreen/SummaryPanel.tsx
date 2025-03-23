@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { marked } from "marked";  
+import Image from "next/image";
 import FileSection from "./FileSection";
 
 interface SummaryPanelProps {
@@ -40,7 +41,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({ summary, selectedOption, se
         <h3 className="font-bold text-lg">Resumo</h3>
         {imageSrc ? (
           <div className="mt-2">
-            <img src={imageSrc} alt="Summary Image" className="max-w-full h-auto" />
+            <Image src={imageSrc} alt="Summary Image" className="max-w-full h-auto" />
           </div>
         ) : formattedSummary ? (
           <div className="mt-2 text-gray-800" dangerouslySetInnerHTML={{ __html: formattedSummary }} />

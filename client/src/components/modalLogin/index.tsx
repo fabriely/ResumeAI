@@ -122,7 +122,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                   />
                   <button
                   type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-900"
+                  className="absolute right-3 -mt-6 transform -translate-y-1/2 text-gray-600 hover:text-gray-900 "
                   onClick={togglePasswordVisibility}
                   >
                   {passwordVisible ? <EyeOff size={20} /> : <Eye size={20} />}

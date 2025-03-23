@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "services/api";
 import { useSession } from "next-auth/react";
 import { Plus, X } from "lucide-react";
@@ -25,6 +25,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
     "Analisar":["análise"], 
   };
 
+  // Sempre que a opção selecionada mudar, limpar o resumo
+    useEffect(() => {
+      setSummary("");
+    }, [selectedOption, setSummary]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -42,6 +47,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("option", selectedOption);
+
+         // Adicionar o email se o usuário estiver logado
+         if(session?.user?.email){
+          formData.append("email", session.user.email);
+        }
 
         setMessages((prev) => [
           ...prev,
