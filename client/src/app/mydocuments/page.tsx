@@ -9,6 +9,7 @@ import { ClipboardCopy, Trash, Calendar, Download } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Header from "components/chatbotScreen/Header";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 interface Summary {
   id: number;
@@ -27,17 +28,21 @@ const PDFApp = dynamic(() => import("components/pdfCreator").then(mod => mod.App
 export default function MeusDocumentos() {
   const { data: session } = useSession();
   const [summaries, setSummaries] = useState<Summary[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
-    if (session?.user?.email) {
-      api.get(`/users/${session.user.email}/summaries/`)
-        .then(response => {
-          setSummaries(response.data.summaries);
-          console.log(response.data);
-        })
-        .catch(error => console.error("Erro ao buscar resumos", error));
+    if (!session?.user?.email) {
+      router.replace('/chatbot'); // Redireciona usando o router do Next.js
+      return;
     }
-  }, [session]);
+
+    api.get(`/users/${session.user.email}/summaries/`)
+      .then(response => {
+        setSummaries(response.data.summaries);
+        console.log(response.data);
+      })
+      .catch(error => console.error("Erro ao buscar resumos", error));
+  }, [session, router]);
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -146,4 +151,4 @@ export default function MeusDocumentos() {
       </div>
     </div>
   );
-}
+} 
