@@ -1,10 +1,14 @@
 import { NextAuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
 import api from 'services/api';
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -34,7 +38,8 @@ export const nextAuthOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/'
+    signIn: '/login',
+    error: '/login',
   },
   callbacks: {
     async jwt({ token, user }) {
