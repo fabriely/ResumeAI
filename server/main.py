@@ -1,11 +1,15 @@
 # app/main.py
 from fastapi import FastAPI, HTTPException
+import uvicorn
+import pytest
+import sys
 from pydantic import ValidationError
-from schemas import LoginCredentials
+from schemas.user_schema import LoginCredentials
 from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
-from models import Base
+from dependencies import Base
 from routes import users, summaries, analyze
+
 
 DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -41,3 +45,19 @@ async def login(credentials: LoginCredentials):
         raise HTTPException(status_code=400, detail=e.errors())
 
     return {"success": True, "message": "Login realizado com sucesso!"}
+
+
+
+def run_tests():
+    """Executa os testes antes de iniciar o servidor"""
+    print("🔍 Executando testes automatizados...")
+    result = pytest.main(["tests/"])  # Executa os testes na pasta "tests"
+    
+    if result != 0:
+        print("❌ Testes falharam! Corrija os erros antes de iniciar o servidor.")
+        sys.exit(1)  # Interrompe o servidor caso os testes falhem
+    print("✅ Todos os testes passaram! Iniciando o servidor...")
+
+if __name__ == "__main__":
+    run_tests()  # Executa os testes antes de iniciar o servidor
+    uvicorn.run(app, host="0.0.0.0", port=8000)

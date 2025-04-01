@@ -1,39 +1,18 @@
-// import { render, screen } from '@testing-library/react';
-// import Login from '../../src/app/login/page';
-// import theme from 'styles/theme';
-// import { ThemeProvider } from 'styled-components';
+import { render, screen, fireEvent } from '@testing-library/react';
+import LoginModal from '../../src/components/modalLogin';
 
-// describe('Login', () => {
-//   it('should render the title', () => {
-//     render(
-//       <ThemeProvider theme={theme}>
-//         <Login />
-//       </ThemeProvider>
-//     );
-//     const title = screen.getByText('NextJS Boilerplate');
-//     expect(title).toBeInTheDocument();
-//     expect(title).toMatchSnapshot();
-//   });
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
 
-//   it('should render the subtitle', () => {
-//     render(
-//       <ThemeProvider theme={theme}>
-//         <Login />
-//       </ThemeProvider>
-//     );
-//     const subtitle = screen.getByText('Made with', { exact: false });
-//     expect(subtitle).toBeInTheDocument();
-//     expect(subtitle).toMatchSnapshot();
-//   });
+test('deve exibir erros ao tentar logar sem preencher os campos', () => {
+  render(<LoginModal onClose={() => {}} />);
 
-//   it('should render the logo', () => {
-//     render(
-//       <ThemeProvider theme={theme}>
-//         <Login />
-//       </ThemeProvider>
-//     );
-//     const logo = screen.getByAltText('Logo do ResumeAI');
-//     expect(logo).toBeInTheDocument();
-//     expect(logo).toMatchSnapshot();
-//   });
-// });
+  const botao = screen.getByRole('button', { name: /Login/i });
+  fireEvent.click(botao);
+
+  expect(screen.getByText(/Insira um email válido/i)).toBeInTheDocument();
+  expect(screen.getByText(/Insira sua senha/i)).toBeInTheDocument();
+});

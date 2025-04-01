@@ -26,9 +26,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   };
 
   const goToRegister = () => {
-    router.push("/register");
+    router.push("/register/form");
     onClose();
   };
+
+  const goToRedefinePassword = () => {
+    router.push("/redefine-password/verify-email")
+    onClose();
+  }
 
   const handleLogin = async () => {
     try {
@@ -97,6 +102,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
+               {!email && (
+                  <p className="text-[#761d91] text-sm font-semibold mt-1">Insira um email válido</p>
+                  )}
             </div>
 
             <div className="grid gap-2 justify-center">
@@ -104,33 +112,38 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                 Senha
               </Label>
                 <div className="relative w-[324px]">
-                <Input
+                  <Input
                   className="bg-white border-2 border-[#004BD4] w-full h-[47px] rounded-[16px] pr-10"
                   id="password"
                   type={passwordVisible ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                />
-                <button
+                  />
+                  <button
                   type="button"
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-900"
                   onClick={togglePasswordVisibility}
-                >
+                  >
                   {passwordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
+                  </button>
+                  {!password && (
+                  <p className="text-[#761d91] text-sm font-semibold mt-1">Insira sua senha</p>
+                  )}
                 </div>
                 {errorMessage && (
                   <p className="text-red-500 text-sm mt-0">{errorMessage}</p>
                 )}
               <div className="text-center">
-                <span className="text-black font-[Roboto] cursor-pointer hover:underline">
+                <span className="text-black font-[Roboto] cursor-pointer hover:underline"
+                  onClick={goToRedefinePassword}>
                   Esqueci minha senha
                 </span>
               </div>
             </div>
             <Button
               className="w-full h-[47px] rounded-[24px] bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA]"
+              disabled={!email || !password}
               onClick={handleLogin}
             >
               Login
