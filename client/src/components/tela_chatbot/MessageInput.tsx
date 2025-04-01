@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import Image from 'next/image';
-import Send from '../../assets/Send.png';
+import { Send } from '../../assets';
 
 interface MessageInputProps {
   message: string;

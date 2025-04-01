@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React from "react";
 import { Header } from "components";
 import  FormRegister  from "components/cardRegister";
 
@@ -8,7 +8,7 @@ import  FormRegister  from "components/cardRegister";
 export default function Register() {
 
     return (
-        <div className="">
+        <div>
             <Header/>
             <FormRegister/>
         </div>

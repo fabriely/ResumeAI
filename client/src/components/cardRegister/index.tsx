@@ -6,7 +6,6 @@ import { Label } from "components/ui/label";
 import { Checkbox } from '@mui/material';
 import { useRouter } from "next/navigation";
 import { validateEmail, validatePassword} from "../../validations/loginValidationSchema";
-import { boolean, string } from "zod";
 
 const FormRegister = () => {
     const router = useRouter();
@@ -14,7 +13,6 @@ const FormRegister = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [boxChecked, setBoxChecked] = useState("");
 
     const handleRegister = async () => {
         try {
@@ -26,7 +24,7 @@ const FormRegister = () => {
     
           const passwordValidation = validatePassword(password);
           if (!passwordValidation.success) {
-            setErrorMessage(passwordValidation.message);
+            setErrorMessage(passwordValidation.message || "Senha inválida.");
             return;
           }
     
