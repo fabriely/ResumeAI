@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "ResumeAI",
   description: "A simple boilerplate for next.js",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logoresumeai.ico", 
+  },
 };
 
 export default function RootLayout({
@@ -16,9 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <NextAuthSessionProvider>
-    <html>
-      <body>{children}</body>
-    </html>
+      <html>
+        <body>{children}</body>
+      </html>
     </NextAuthSessionProvider>
   );
 }

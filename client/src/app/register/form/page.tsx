@@ -7,7 +7,7 @@ import  FormRegister  from "components/formRegister";
 export default function Register() {
 
     return (
-        <div className="">
+        <div>
             <Header/>
             <FormRegister/>
         </div>
