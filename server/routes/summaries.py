@@ -28,15 +28,19 @@ async def summarize(file: UploadFile = File(...)):
     return {"summary_data": summary_data}
 
 @router.post("/summarize/message/")
-async def summarize_message(message: schemas.MessageRequest):
-    text = message.message
+async def summarize_message(message: schemas.MessageRequest, db: Session = Depends(dependencies.get_db)):
+    if not message.message.startswith("Resumo: "):
+        return {"error": "Mensagem inválida. Use 'Resumo: [texto]'."}
+    
+    text = message.message.replace("Resumo: ", "").strip()
     summary = summarize_text(text)
     summary_data = {
-        "file_name": "Mensagem de texto resumida",
+        "file_name": "resumo-chat",
         "summary_content": summary,
         "created_at": datetime.now().isoformat(),
     }
-
+    
+    crud.add_summary(db=db, email=message.user_email, summary_data=summary_data)
     return {"summary_data": summary_data}
 
 # Endpoints para adicionar e buscar resumos
@@ -62,4 +66,3 @@ async def delete_summary(email: str, summary_id: int, db: Session = Depends(depe
     if success:
         return {"message": "Resumo deletado com sucesso."}
     raise HTTPException(status_code=404, detail="Resumo ou usuário não encontrado")
-
