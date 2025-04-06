@@ -38,4 +38,5 @@ jobs:
       working-directory: ./server
       run: |
         pip install pytest requests
-        pytest tests/ -v
+        PYTHONPATH=. pytest tests/ -v
+
