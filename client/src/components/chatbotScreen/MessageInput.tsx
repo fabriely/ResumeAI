@@ -55,7 +55,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
           className="min-w-12 max-w-12 min-h-12 max-h-12 bg-gradient-to-r m-0 from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA] text-white rounded-full transition-all flex items-center justify-center"
         >
           <Send className="w-6 h-6" />
-        </button>>
+        </button>
       </div>
         {(!message && !activeFile) && (
           <p className="text-[#761d91] text-sm font-bold">Por favor, digite uma mensagem ou envie um arquivo.</p>
