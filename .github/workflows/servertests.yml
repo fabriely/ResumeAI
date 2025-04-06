@@ -1,0 +1,42 @@
+name: Server Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Create .env file
+      run: |
+        cd server
+        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+
+    - name: Install Python dependencies
+      working-directory: ./server
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Start FastAPI serverBackend
+      working-directory: ./server
+      run: |
+        nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
+
+    - name: Wait for server to be ready
+      run: sleep 5
+
+    - name: Run tests
+      working-directory: ./server
+      run: |
+        pip install pytest requests
+        PYTHONPATH=. pytest tests/ -v
+
