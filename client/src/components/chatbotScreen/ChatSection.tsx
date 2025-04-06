@@ -156,64 +156,68 @@ const ChatSection: React.FC<ChatSectionProps> = ({ selectedOption, messages, cla
     }
   };
 
-  return (
-    <div className={`${className} flex flex-col h-full rounded-lg`}>
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-100 ">
-        <div className="flex space-x-4 overflow-x-auto">
-          {files.map((file) => (
-            <div
-              key={file.id}
-              className={`flex items-center space-x-2 px-4 py-1 rounded-t-md cursor-pointer ${activeFile === file.id ? "bg-gray-200 shadow-sm text-black" : "bg-gray-50 text-gray-500"}`}
-              onClick={() => {
-                setActiveFile(file.id);
-                setSummary(summaries[file.id] || "");
+
+return (
+  <div className={`${className} flex flex-col h-full rounded-lg`}>
+    <div className="flex items-center justify-between px-4 py-2 bg-gray-100 overflow-x-auto">
+      <div className="flex flex-wrap gap-2">
+        {files.map((file) => (
+          <div
+            key={file.id}
+            className={`flex items-center space-x-2 px-3 py-1 rounded-t-md cursor-pointer max-w-xs min-w-0 ${activeFile === file.id ? "bg-gray-200 shadow-sm text-black" : "bg-gray-50 text-gray-500"}`}
+            onClick={() => {
+              setActiveFile(file.id);
+              setSummary(summaries[file.id] || "");
+            }}
+          >
+            <span className="text-sm truncate">{file.name}</span>
+            <button
+              className="text-black hover:text-black-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCloseFile(file.id);
               }}
             >
-              <span className="text-sm">{file.name}</span>
-              <button
-                className="text-black hover:text-black-500"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCloseFile(file.id);
-                }}
-              >
-                <X size={14} />
-              </button>
-            </div>
-          ))}
-          <button
-            className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA] text-white rounded-full"
-            onClick={() => document.getElementById("file-input")?.click()}
-          >
-            <Plus size={20} />
-          </button>
-        </div>
-        <input id="file-input" type="file" className="hidden" onChange={handleFileChange} />
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col bg-white">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`p-3 m-2 rounded-lg max-w-[80%] ${message.isBot ? "bg-gray-200 text-black self-start" : "bg-purple-600 text-white self-end"
-              }`}
-          >
-            {message.text}
+              <X size={14} />
+            </button>
           </div>
         ))}
+        <button
+          className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-[#004BD4] via-[#5331CF] via-[#7726CD] to-[#A219CA] text-white rounded-full"
+          onClick={() => document.getElementById("file-input")?.click()}
+        >
+          <Plus size={20} />
+        </button>
       </div>
-      <MessageInput
-        message={message}
-        setMessage={setMessage}
-        handleKeyPress={handleKeyPress}
-        handleSendMessage={handleSendMessage}
-        handleSendFile={handleSendFile}
-        activeFile={activeFile}
-        files={files}
-        className="p-4 bg-white border-t-2 rounded-sm"
-      />
-      </div>
-  );
-};
+      <input id="file-input" type="file" className="hidden" onChange={handleFileChange} />
+    </div>
 
+    <div className="flex-1 overflow-y-auto p-2 md:p-4 flex flex-col bg-white">
+      {messages.map((message, index) => (
+        <div
+          key={index}
+          className={`p-3 m-1 md:m-2 rounded-lg break-words max-w-[90%] md:max-w-[80%] ${
+            message.isBot
+              ? "bg-gray-200 text-black self-start"
+              : "bg-purple-600 text-white self-end"
+          }`}
+        >
+          {message.text}
+        </div>
+      ))}
+    </div>
+
+    <MessageInput
+      message={message}
+      setMessage={setMessage}
+      handleKeyPress={handleKeyPress}
+      handleSendMessage={handleSendMessage}
+      handleSendFile={handleSendFile}
+      activeFile={activeFile}
+      files={files}
+      className="p-2 md:p-4 bg-white border-t-2 rounded-sm"
+    />
+  </div>
+)
+}
 export default ChatSection;

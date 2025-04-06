@@ -69,8 +69,8 @@ def test_delete_summary(db, test_user):
     summaries = get_summaries(db, test_user.email)
     assert len(summaries) == 0  # Deve estar vazio após a exclusão
 
-def test_delete_summary_with_invalid_user(db):
+def test_delete_summary_with_invalid_user(db, test_user):
     """Testa a exclusão de um resumo com um usuário inválido"""
     summary_data = SummaryRequest(content={"title": "Delete Me", "text": "This will be deleted."})
-    summary = add_summary(db, "", summary_data)
+    summary = add_summary(db, test_user.email, summary_data)
     assert delete_summary(db, "", summary.id) is False  # Usuário inválido

@@ -33,8 +33,6 @@ const MessageInput: React.FC<MessageInputProps> = ({ message, setMessage, handle
       validateAndSend();
     }
   };
-  console.log(message)
-  console.log(activeFile)
 
   return (
     <div className={`${className} flex flex-col space-y-2`}>

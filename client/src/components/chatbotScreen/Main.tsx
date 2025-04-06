@@ -21,9 +21,9 @@ const ChatbotHeader: React.FC = () => {
   return (
     <div className="bg-white min-h-screen flex flex-col items-center justify-start">
       <Header />
-      <div className="flex p-8 space-x-8 h-full mt-[64px] w-full max-w-screen">
+      <div className="flex p-8 space-x-8 mt-[64px] w-full max-w-screen">
         <SummaryPanel summary={summary} selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
-        <div className="flex flex-col w-1/2 h-[800px] border-2 border-gray-500 rounded-lg">
+        <div className="flex flex-col w-1/2 h-[700px] border-2 border-gray-500 rounded-lg">
           <ChatSection 
             selectedOption={selectedOption}
             messages={messages} 
