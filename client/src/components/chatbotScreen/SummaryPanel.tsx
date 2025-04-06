@@ -36,7 +36,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({ summary, selectedOption, se
   return (
     <div className="w-full bg-gray-100 p-4 rounded-lg h-full flex flex-col shadow-md">
       <FileSection selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
-      <div className="p-4 bg-white rounded-lg shadow-md overflow-auto max-h-[645px]"> {/* Adicionando o scroll com altura máxima */}
+      <div className="p-4 bg-white rounded-lg shadow-md overflow-auto max-h-[620px]"> {/* Adicionando o scroll com altura máxima */}
         <h3 className="font-bold text-lg">Resumo</h3>
         {imageSrc ? (
           <div className="mt-2">

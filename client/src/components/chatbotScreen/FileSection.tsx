@@ -22,7 +22,7 @@ const FileSection: React.FC<FileSectionProps> = ({ selectedOption, setSelectedOp
         <label className="block mb-2 text-gray-700 font-medium">Escolha uma opção:</label>
         <div className="relative">
           <div
-            className="w-full rounded-lg px-4 py-2 bg-white shadow-md text-black text-xl font-semibold cursor-pointer flex items-center justify-between"
+            className="w-full rounded-lg px-4 py-2 bg-white shadow-md text-black text-md font-semibold cursor-pointer flex items-center justify-between"
             onClick={() => setIsOpen(!isOpen)}
           >
             <span className="flex items-center">
@@ -30,7 +30,7 @@ const FileSection: React.FC<FileSectionProps> = ({ selectedOption, setSelectedOp
               {selectedOption === 'Analisar' && <Image src={Analisar} alt="Analisar Icon" width={24} height={24} className="mr-2" />}
               {selectedOption}
             </span>
-            <span className="ml-2">{isOpen ? '▲' : '▼'}</span>
+            <span className='ml-6'>{isOpen ? '▲' : '▼'}</span>
           </div>
 
           {isOpen && (

@@ -27,7 +27,6 @@ export const nextAuthOptions: NextAuthOptions = {
         });
 
         const { user } = response.data.data;
-        console.log(response.data.data);
 
         if (user) {
           return user;
