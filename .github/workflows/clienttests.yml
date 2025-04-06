@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: client  # entra na pasta do seu frontend
+        working-directory: client  
 
     steps:
       - name: Checkout repository
@@ -26,6 +26,9 @@ jobs:
 
       - name: Install pnpm
         run: npm install -g pnpm
+
+      - name: Add pnpm to PATH
+        run: echo "::add-path::$(npm bin -g)"
 
       - name: Install dependencies with pnpm
         run: pnpm install
